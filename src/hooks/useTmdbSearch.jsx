@@ -79,12 +79,19 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
 
   const goToPage = useCallback(
     (p, opts = {}) => {
-      // evita paginação inválida
-      if (!query || !query.trim()) return;
       const target = Math.max(1, Math.floor(p));
+      // Se não houver query, assumimos que o usuário está vendo a lista padrão
+      // (por exemplo, populares) e usamos fetchDefault para navegar.
+      if (!query || !query.trim()) {
+        // fetchDefault é seguro de ser chamado mesmo que já estejamos na primeira página
+        fetchDefault(target);
+        return;
+      }
+
+      // para buscas por query, fazemos a paginação normal
       fetchPage(query, target, opts);
     },
-    [fetchPage, query]
+    [fetchPage, fetchDefault, query]
   );
 
   const nextPage = useCallback((opts = {}) => goToPage(page + 1, opts), [goToPage, page]);

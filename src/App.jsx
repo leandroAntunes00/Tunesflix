@@ -12,8 +12,19 @@ import SearchBar from './components/SearchBar/SearchBar';
 import { useFavorites } from './hooks/useFavorites';
 
 function App() {
-  const { query, search, results, loading, error, page, nextPage, prevPage, totalPages, reset, fetchDefault } =
-    useTmdbSearch();
+  const {
+    query,
+    search,
+    results,
+    loading,
+    error,
+    page,
+    nextPage,
+    prevPage,
+    totalPages,
+    reset,
+    fetchDefault,
+  } = useTmdbSearch();
   // favorites moved to FavoritesContext
   const { favorites, toggleFavorite } = useFavorites();
   const [view, setView] = useState('home');
