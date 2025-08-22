@@ -30,3 +30,11 @@ test('MovieModal mostra detalhes e fecha', async () => {
   await user.click(screen.getByRole('button', { name: /fechar/i }));
   expect(onClose).toHaveBeenCalled();
 });
+
+test('MovieModal mostra loading e mensagem de erro', async () => {
+  render(<MovieModal open={true} onClose={() => {}} loading={true} details={null} error={null} />)
+  expect(screen.getByText(/Carregando/i)).toBeInTheDocument()
+
+  render(<MovieModal open={true} onClose={() => {}} loading={false} details={null} error={new Error('falha')} />)
+  expect(screen.getByText(/falha/i)).toBeInTheDocument()
+})
