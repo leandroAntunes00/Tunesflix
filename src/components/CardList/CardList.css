@@ -2,6 +2,9 @@
   display: grid;
   gap: 0.75rem;
   grid-template-columns: 1fr;
+  /* garante espaço mínimo para que, com poucos cards, o footer não suba */
+  min-height: calc(100vh - var(--site-header-footer-height, 220px));
+  align-content: start;
 }
 
 @media (min-width: 640px) {

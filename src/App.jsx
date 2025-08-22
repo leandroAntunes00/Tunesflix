@@ -1,4 +1,3 @@
-import './App.css';
 import { useEffect, useState, useCallback } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -108,7 +107,11 @@ function App() {
         {view === 'favorites' && (
           <section>
             <h2>Favoritos</h2>
-            <FavoritesView favorites={favorites} onToggleFavorite={handleToggleFavorite} />
+            <FavoritesView
+              favorites={favorites}
+              onToggleFavorite={handleToggleFavorite}
+              onDetails={handleDetails}
+            />
           </section>
         )}
       </main>
