@@ -1,0 +1,25 @@
+.tf-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.tf-modal {
+  background: #0f1113;
+  color: inherit;
+  border-radius: 10px;
+  max-width: 880px;
+  width: 94%;
+  padding: 1rem;
+  position: relative;
+}
+.tf-modal__close { position: absolute; right: 8px; top: 8px; background: transparent; border: none; font-size: 1.4rem; cursor: pointer; }
+.tf-modal__header { display:flex; align-items:center; justify-content:space-between; gap:1rem }
+.tf-modal__body { display:flex; gap:1rem; margin-top:1rem }
+.tf-modal__poster img { width:220px; border-radius:8px }
+.tf-modal__info { flex:1 }
+.tf-modal__overview { color:#ddd }
+.tf-modal__loading, .tf-modal__error { padding: 1rem }
