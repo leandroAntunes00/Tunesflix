@@ -1,3 +1,4 @@
+import React from 'react'
 import CardList from '../CardList/CardList'
 
 // favorites: object map id -> movie (cached summary)

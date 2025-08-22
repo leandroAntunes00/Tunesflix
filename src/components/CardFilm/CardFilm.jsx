@@ -1,3 +1,4 @@
+import React from 'react'
 import './CardFilm.css'
 
 // Props:
@@ -8,7 +9,11 @@ import './CardFilm.css'
 export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFavorite = false }) {
   const title = film.title || film.name || 'Sem título'
   const date = film.release_date || film.first_air_date || ''
-  const year = date ? new Date(date).getFullYear() : ''
+  let year = ''
+  if (date) {
+    const m = String(date).match(/^(\d{4})/)
+    year = m ? m[1] : String(new Date(date).getFullYear())
+  }
 
   // suporte a caminho do TMDB ou URL completo
   const posterPath = film.poster_path || film.poster || film.posterPath || ''

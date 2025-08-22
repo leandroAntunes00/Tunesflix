@@ -1,5 +1,5 @@
+import React, { useEffect } from 'react'
 import './MovieModal.css'
-import { useEffect } from 'react'
 
 export default function MovieModal({ open, onClose, loading, details, error }) {
   useEffect(() => {

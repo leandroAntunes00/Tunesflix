@@ -1,3 +1,4 @@
+import React from 'react'
 import CardFilm from '../CardFilm/CardFilm'
 import './CardList.css'
 
