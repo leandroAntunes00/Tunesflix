@@ -12,7 +12,7 @@ import SearchBar from './components/SearchBar/SearchBar';
 import { useFavorites } from './hooks/useFavorites';
 
 function App() {
-  const { query, search, results, loading, error, page, nextPage, prevPage, totalPages } =
+  const { query, search, results, loading, error, page, nextPage, prevPage, totalPages, reset, fetchDefault } =
     useTmdbSearch();
   // favorites moved to FavoritesContext
   const { favorites, toggleFavorite } = useFavorites();
@@ -80,7 +80,6 @@ function App() {
 
         {view === 'home' && (
           <>
-            {loading && <div>Carregando...</div>}
             {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
 
             <CardList
@@ -88,6 +87,7 @@ function App() {
               onToggleFavorite={handleToggleFavorite}
               onDetails={handleDetails}
               favorites={favorites}
+              loading={loading}
             />
 
             {totalPages > 1 && (
