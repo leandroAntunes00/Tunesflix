@@ -1,0 +1,75 @@
+.tf-card {
+  display: flex;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.75rem;
+  border-radius: 8px;
+  align-items: center;
+}
+.tf-card__media {
+  width: 84px;
+  flex: 0 0 84px;
+}
+
+.tf-card__poster {
+  width: 84px;
+  height: 126px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.tf-card__placeholder {
+  width: 84px;
+  height: 126px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  color: #777;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.tf-card__body {
+  flex: 1;
+  text-align: left;
+}
+
+.tf-card__title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+}
+
+.tf-card__meta {
+  margin: 0 0 0.5rem 0;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.tf-card__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tf-btn {
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tf-btn--primary {
+  background: linear-gradient(90deg, #646cff, #535bf2);
+  color: white;
+  border: none;
+}
+
+.tf-btn--ghost {
+  background: transparent;
+  color: inherit;
+}
+
+.tf-btn.is-fav {
+  color: #ffd166;
+}

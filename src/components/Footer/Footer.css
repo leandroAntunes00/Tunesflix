@@ -1,0 +1,19 @@
+.tf-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+.tf-footer__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.tf-footer__nav a {
+  color: inherit;
+  margin-left: 0.75rem;
+  text-decoration: none;
+}
