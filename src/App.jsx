@@ -7,40 +7,23 @@ import CardList from './components/CardList/CardList'
 import FavoritesView from './components/Favorites/FavoritesView'
 import MovieModal from './components/MovieModal/MovieModal'
 import { getMovieDetails } from './services/tmdb'
+import SearchBar from './components/SearchBar/SearchBar'
 
-const FAVORITES_KEY = 'tunesflix:favorites-v2'
-
-function loadFavorites() {
-  try {
-    const raw = localStorage.getItem(FAVORITES_KEY)
-    if (!raw) return {} // objeto id -> film
-    const obj = JSON.parse(raw)
-    return obj || {}
-  } catch {
-    return {}
-  }
-}
-
-function saveFavorites(obj) {
-  try {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(obj))
-  } catch {
-    // ignore
-  }
-}
+// Removed internal favorites logic
+import { useFavorites } from './hooks/useFavorites'
 
 function App() {
   const { query, search, results, loading, error, page, nextPage, prevPage, totalPages } = useTmdbSearch()
-  const [favorites, setFavorites] = useState(() => loadFavorites())
+  const [_, setLocalState] = useState(null)
+  // favorites moved to FavoritesContext
+  const { favorites, toggleFavorite } = useFavorites()
   const [view, setView] = useState('home')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalLoading, setModalLoading] = useState(false)
   const [modalDetails, setModalDetails] = useState(null)
   const [modalError, setModalError] = useState(null)
 
-  useEffect(() => {
-    saveFavorites(favorites)
-  }, [favorites])
+  // Removed saving favorites to local storage
 
   // demo: se não houver query e existir chave do TMDB, executa uma busca inicial
   useEffect(() => {
@@ -52,15 +35,9 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleToggleFavorite = useCallback((film) => {
-    setFavorites((prev) => {
-      const next = { ...(prev || {}) }
-      const key = String(film.id)
-      if (next[key]) delete next[key]
-      else next[key] = { id: film.id, title: film.title || film.name, poster_path: film.poster_path || film.poster_path || film.poster, release_date: film.release_date || film.first_air_date }
-      return next
-    })
-  }, [])
+    const handleToggleFavorite = useCallback((film) => {
+      toggleFavorite(film)
+    }, [toggleFavorite])
 
   const handleDetails = useCallback(async (film) => {
     if (!film?.id) return
@@ -84,16 +61,7 @@ function App() {
 
       <main style={{ maxWidth: 1280, margin: '0 auto', padding: '1rem' }}>
         <section style={{ marginBottom: '1rem' }}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              const q = e.currentTarget.q?.value || ''
-              search(q)
-            }}
-          >
-            <input name="q" placeholder="Buscar filmes (ex: Batman)" defaultValue={query} style={{ padding: '0.6rem', width: '60%', maxWidth: 520, marginRight: 8 }} />
-            <button type="submit">Buscar</button>
-          </form>
+          <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
         </section>
 
         {view === 'home' && (
