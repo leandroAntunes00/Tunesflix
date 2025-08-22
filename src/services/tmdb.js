@@ -52,6 +52,11 @@ export async function searchMovies(query, page = 1, includeAdult = false) {
   return safeFetch(url);
 }
 
+export async function fetchPopularMovies(page = 1) {
+  const url = buildUrl('/movie/popular', { page });
+  return safeFetch(url);
+}
+
 export async function getMovieDetails(id, appendToResponse = '') {
   if (!id) throw new Error('getMovieDetails: id is required');
   const params = {};
@@ -60,4 +65,4 @@ export async function getMovieDetails(id, appendToResponse = '') {
   return safeFetch(url);
 }
 
-export default { searchMovies, getMovieDetails };
+export default { searchMovies, getMovieDetails, fetchPopularMovies };

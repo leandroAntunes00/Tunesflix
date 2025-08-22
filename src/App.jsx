@@ -61,7 +61,17 @@ function App() {
 
   return (
     <>
-      <Header onNavigate={(v) => setView(v)} active={view} />
+      <Header
+        onNavigate={(v) => {
+          setView(v);
+          if (v === 'home') {
+            // limpar query e carregar lista padrão (populares)
+            reset();
+            fetchDefault();
+          }
+        }}
+        active={view}
+      />
 
       <main style={{ maxWidth: 1280, margin: '0 auto', padding: '1rem' }}>
         <section style={{ marginBottom: '1rem' }}>
