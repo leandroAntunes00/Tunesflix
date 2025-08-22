@@ -1,0 +1,27 @@
+.tf-header {
+  background: linear-gradient(90deg, rgba(100,108,255,0.12), transparent 70%);
+  padding: 1rem 0;
+  margin-bottom: 1.25rem;
+}
+.tf-header__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tf-brand {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: 0.6px;
+}
+.tf-nav__link {
+  margin-left: 1rem;
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.9;
+}
+.tf-nav__link:hover {
+  opacity: 1;
+}
