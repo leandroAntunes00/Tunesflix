@@ -1,59 +1,64 @@
-import './App.css'
-import { useEffect, useState, useCallback } from 'react'
-import Header from './components/Header/Header'
-import Footer from './components/Footer/Footer'
-import useTmdbSearch from './hooks/useTmdbSearch'
-import CardList from './components/CardList/CardList'
-import FavoritesView from './components/Favorites/FavoritesView'
-import MovieModal from './components/MovieModal/MovieModal'
-import { getMovieDetails } from './services/tmdb'
-import SearchBar from './components/SearchBar/SearchBar'
+import './App.css';
+import { useEffect, useState, useCallback } from 'react';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import useTmdbSearch from './hooks/useTmdbSearch';
+import CardList from './components/CardList/CardList';
+import FavoritesView from './components/Favorites/FavoritesView';
+import MovieModal from './components/MovieModal/MovieModal';
+import { getMovieDetails } from './services/tmdb';
+import SearchBar from './components/SearchBar/SearchBar';
 
 // Removed internal favorites logic
-import { useFavorites } from './hooks/useFavorites'
+import { useFavorites } from './hooks/useFavorites';
 
 function App() {
-  const { query, search, results, loading, error, page, nextPage, prevPage, totalPages } = useTmdbSearch()
-  const [_, setLocalState] = useState(null)
+  const { query, search, results, loading, error, page, nextPage, prevPage, totalPages } =
+    useTmdbSearch();
   // favorites moved to FavoritesContext
-  const { favorites, toggleFavorite } = useFavorites()
-  const [view, setView] = useState('home')
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modalLoading, setModalLoading] = useState(false)
-  const [modalDetails, setModalDetails] = useState(null)
-  const [modalError, setModalError] = useState(null)
+  const { favorites, toggleFavorite } = useFavorites();
+  const [view, setView] = useState('home');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [modalDetails, setModalDetails] = useState(null);
+  const [modalError, setModalError] = useState(null);
 
   // Removed saving favorites to local storage
 
   // demo: se não houver query e existir chave do TMDB, executa uma busca inicial
   useEffect(() => {
-    const hasKey = Boolean(import.meta.env.VITE_TMDB_API_KEY || import.meta.env.VITE_TMDB_READ_ACCESS_TOKEN)
+    const hasKey = Boolean(
+      import.meta.env.VITE_TMDB_API_KEY || import.meta.env.VITE_TMDB_READ_ACCESS_TOKEN
+    );
     if (!query && hasKey) {
       // busca inicial suave para ver a lista funcionando
-      search('matrix')
+      search('matrix');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
-    const handleToggleFavorite = useCallback((film) => {
-      toggleFavorite(film)
-    }, [toggleFavorite])
+  const handleToggleFavorite = useCallback(
+    (film) => {
+      toggleFavorite(film);
+    },
+    [toggleFavorite]
+  );
 
   const handleDetails = useCallback(async (film) => {
-    if (!film?.id) return
-    setModalOpen(true)
-    setModalLoading(true)
-    setModalDetails(null)
-    setModalError(null)
+    if (!film?.id) return;
+    setModalOpen(true);
+    setModalLoading(true);
+    setModalDetails(null);
+    setModalError(null);
     try {
-      const data = await getMovieDetails(film.id, 'credits')
-      setModalDetails(data)
+      const data = await getMovieDetails(film.id, 'credits');
+      setModalDetails(data);
     } catch (err) {
-      setModalError(err)
+      setModalError(err);
     } finally {
-      setModalLoading(false)
+      setModalLoading(false);
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -69,13 +74,32 @@ function App() {
             {loading && <div>Carregando...</div>}
             {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
 
-            <CardList items={results} onToggleFavorite={handleToggleFavorite} onDetails={handleDetails} favorites={favorites} />
+            <CardList
+              items={results}
+              onToggleFavorite={handleToggleFavorite}
+              onDetails={handleDetails}
+              favorites={favorites}
+            />
 
             {totalPages > 1 && (
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', marginTop: 12 }}>
-                <button onClick={prevPage} disabled={page <= 1}>Anterior</button>
-                <span>{page} / {totalPages}</span>
-                <button onClick={nextPage} disabled={page >= totalPages}>Próxima</button>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 8,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 12,
+                }}
+              >
+                <button onClick={prevPage} disabled={page <= 1}>
+                  Anterior
+                </button>
+                <span>
+                  {page} / {totalPages}
+                </span>
+                <button onClick={nextPage} disabled={page >= totalPages}>
+                  Próxima
+                </button>
               </div>
             )}
           </>
@@ -89,11 +113,17 @@ function App() {
         )}
       </main>
 
-  <Footer />
+      <Footer />
 
-  <MovieModal open={modalOpen} onClose={() => setModalOpen(false)} loading={modalLoading} details={modalDetails} error={modalError} />
+      <MovieModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        loading={modalLoading}
+        details={modalDetails}
+        error={modalError}
+      />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

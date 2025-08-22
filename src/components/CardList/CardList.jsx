@@ -1,15 +1,20 @@
-import React from 'react'
-import CardFilm from '../CardFilm/CardFilm'
-import './CardList.css'
+import React from 'react';
+import CardFilm from '../CardFilm/CardFilm';
+import './CardList.css';
 
 // Props:
 // - items: array of film objects
 // - onDetails(film)
 // - onToggleFavorite(film)
 // - favorites: Set or Map of favorite ids
-export default function CardList({ items = [], onDetails, onToggleFavorite, favorites = new Set() }) {
+export default function CardList({
+  items = [],
+  onDetails,
+  onToggleFavorite,
+  favorites = new Set(),
+}) {
   if (!items || items.length === 0) {
-    return <div className="tf-empty">Nenhum resultado</div>
+    return <div className="tf-empty">Nenhum resultado</div>;
   }
 
   return (
@@ -24,5 +29,5 @@ export default function CardList({ items = [], onDetails, onToggleFavorite, favo
         />
       ))}
     </section>
-  )
+  );
 }

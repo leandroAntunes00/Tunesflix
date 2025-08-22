@@ -1,5 +1,5 @@
-import React from 'react'
-import './CardFilm.css'
+import React from 'react';
+import './CardFilm.css';
 
 // Props:
 // - film: object with { id, title, name, release_date, first_air_date, poster_path }
@@ -7,21 +7,21 @@ import './CardFilm.css'
 // - onToggleFavorite(film)
 // - isFavorite: boolean
 export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFavorite = false }) {
-  const title = film.title || film.name || 'Sem título'
-  const date = film.release_date || film.first_air_date || ''
-  let year = ''
+  const title = film.title || film.name || 'Sem título';
+  const date = film.release_date || film.first_air_date || '';
+  let year = '';
   if (date) {
-    const m = String(date).match(/^(\d{4})/)
-    year = m ? m[1] : String(new Date(date).getFullYear())
+    const m = String(date).match(/^(\d{4})/);
+    year = m ? m[1] : String(new Date(date).getFullYear());
   }
 
   // suporte a caminho do TMDB ou URL completo
-  const posterPath = film.poster_path || film.poster || film.posterPath || ''
+  const posterPath = film.poster_path || film.poster || film.posterPath || '';
   const posterSrc = posterPath
     ? posterPath.startsWith('http')
       ? posterPath
       : `https://image.tmdb.org/t/p/w342${posterPath}`
-    : null
+    : null;
 
   return (
     <article className="tf-card">
@@ -40,7 +40,11 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
         <p className="tf-card__meta">{year}</p>
 
         <div className="tf-card__actions">
-          <button className="tf-btn tf-btn--primary" onClick={() => onDetails && onDetails(film)} aria-label={`Ver detalhes de ${title}`}>
+          <button
+            className="tf-btn tf-btn--primary"
+            onClick={() => onDetails && onDetails(film)}
+            aria-label={`Ver detalhes de ${title}`}
+          >
             Detalhes
           </button>
 
@@ -48,12 +52,14 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
             className={`tf-btn tf-btn--ghost ${isFavorite ? 'is-fav' : ''}`}
             onClick={() => onToggleFavorite && onToggleFavorite(film)}
             aria-pressed={isFavorite}
-            aria-label={isFavorite ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`}
+            aria-label={
+              isFavorite ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`
+            }
           >
             {isFavorite ? '★ Favorito' : '☆ Favoritar'}
           </button>
         </div>
       </div>
     </article>
-  )
+  );
 }
