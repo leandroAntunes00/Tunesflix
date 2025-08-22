@@ -4,26 +4,26 @@ import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
 import useTmdbSearch from './hooks/useTmdbSearch'
 import CardList from './components/CardList/CardList'
+import FavoritesView from './components/Favorites/FavoritesView'
 import MovieModal from './components/MovieModal/MovieModal'
 import { getMovieDetails } from './services/tmdb'
 
-const FAVORITES_KEY = 'tunesflix:favorites'
+const FAVORITES_KEY = 'tunesflix:favorites-v2'
 
 function loadFavorites() {
   try {
     const raw = localStorage.getItem(FAVORITES_KEY)
-    if (!raw) return new Set()
-    const arr = JSON.parse(raw)
-    return new Set(arr)
+    if (!raw) return {} // objeto id -> film
+    const obj = JSON.parse(raw)
+    return obj || {}
   } catch {
-    return new Set()
+    return {}
   }
 }
 
-function saveFavorites(set) {
+function saveFavorites(obj) {
   try {
-    const arr = Array.from(set)
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(arr))
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(obj))
   } catch {
     // ignore
   }
@@ -32,6 +32,7 @@ function saveFavorites(set) {
 function App() {
   const { query, search, results, loading, error, page, nextPage, prevPage, totalPages } = useTmdbSearch()
   const [favorites, setFavorites] = useState(() => loadFavorites())
+  const [view, setView] = useState('home')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalLoading, setModalLoading] = useState(false)
   const [modalDetails, setModalDetails] = useState(null)
@@ -53,9 +54,10 @@ function App() {
 
   const handleToggleFavorite = useCallback((film) => {
     setFavorites((prev) => {
-      const next = new Set(prev)
-      if (next.has(film.id)) next.delete(film.id)
-      else next.add(film.id)
+      const next = { ...(prev || {}) }
+      const key = String(film.id)
+      if (next[key]) delete next[key]
+      else next[key] = { id: film.id, title: film.title || film.name, poster_path: film.poster_path || film.poster_path || film.poster, release_date: film.release_date || film.first_air_date }
       return next
     })
   }, [])
@@ -78,7 +80,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header onNavigate={(v) => setView(v)} active={view} />
 
       <main style={{ maxWidth: 1280, margin: '0 auto', padding: '1rem' }}>
         <section style={{ marginBottom: '1rem' }}>
@@ -94,17 +96,28 @@ function App() {
           </form>
         </section>
 
-        {loading && <div>Carregando...</div>}
-        {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
+        {view === 'home' && (
+          <>
+            {loading && <div>Carregando...</div>}
+            {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
 
-  <CardList items={results} onToggleFavorite={handleToggleFavorite} onDetails={handleDetails} favorites={favorites} />
+            <CardList items={results} onToggleFavorite={handleToggleFavorite} onDetails={handleDetails} favorites={favorites} />
 
-        {totalPages > 1 && (
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', marginTop: 12 }}>
-            <button onClick={prevPage} disabled={page <= 1}>Anterior</button>
-            <span>{page} / {totalPages}</span>
-            <button onClick={nextPage} disabled={page >= totalPages}>Próxima</button>
-          </div>
+            {totalPages > 1 && (
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', marginTop: 12 }}>
+                <button onClick={prevPage} disabled={page <= 1}>Anterior</button>
+                <span>{page} / {totalPages}</span>
+                <button onClick={nextPage} disabled={page >= totalPages}>Próxima</button>
+              </div>
+            )}
+          </>
+        )}
+
+        {view === 'favorites' && (
+          <section>
+            <h2>Favoritos</h2>
+            <FavoritesView favorites={favorites} onToggleFavorite={handleToggleFavorite} />
+          </section>
         )}
       </main>
 
