@@ -2,11 +2,12 @@ import { useEffect, useState, useCallback } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import useTmdbSearch from './hooks/useTmdbSearch';
+import './App.css';
 import CardList from './components/CardList/CardList';
 import FavoritesView from './components/Favorites/FavoritesView';
 import MovieModal from './components/MovieModal/MovieModal';
 import { getMovieDetails } from './services/tmdb';
-import SearchBar from './components/SearchBar/SearchBar';
+import HomeView from './views/HomeView';
 
 // Removed internal favorites logic
 import { useFavorites } from './hooks/useFavorites';
@@ -84,45 +85,22 @@ function App() {
         active={view}
       />
 
-      <main style={{ maxWidth: 1280, margin: '0 auto', padding: '1rem' }}>
-        <section style={{ marginBottom: '1rem' }}>
-          <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
-        </section>
-
+      <main className="tf-main">
         {view === 'home' && (
-          <>
-            {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
-
-            <CardList
-              items={results}
-              onToggleFavorite={handleToggleFavorite}
-              onDetails={handleDetails}
-              favorites={favorites}
-              loading={loading}
-            />
-
-            {totalPages > 1 && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: 12,
-                }}
-              >
-                <button onClick={prevPage} disabled={page <= 1}>
-                  Anterior
-                </button>
-                <span>
-                  {page} / {totalPages}
-                </span>
-                <button onClick={nextPage} disabled={page >= totalPages}>
-                  Próxima
-                </button>
-              </div>
-            )}
-          </>
+          <HomeView
+            query={query}
+            search={search}
+            results={results}
+            loading={loading}
+            error={error}
+            page={page}
+            nextPage={nextPage}
+            prevPage={prevPage}
+            totalPages={totalPages}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+            onDetails={handleDetails}
+          />
         )}
 
         {view === 'favorites' && (

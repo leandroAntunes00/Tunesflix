@@ -1,0 +1,22 @@
+/* Styles for HomeHeader component */
+.tf-home-header {
+  margin-bottom: 12px;
+}
+
+.tf-home-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.tf-home-header p.tf-popular-subtitle {
+  margin: 6px 0 0;
+  color: var(--tf-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 520px) {
+  .tf-home-header h2 {
+    font-size: 1.25rem;
+  }
+}

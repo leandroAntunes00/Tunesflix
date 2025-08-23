@@ -2,13 +2,16 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: 100%;
+  justify-content: center;
 }
 .tf-search__input {
   padding: 0.6rem 0.75rem;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  width: 60%;
-  max-width: 520px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* largura responsiva: no máximo 720px, ou 80% do contêiner */
+  width: min(80%, 720px);
+  max-width: 720px;
 }
 .tf-search__btn {
   padding: 0.6rem 0.9rem;

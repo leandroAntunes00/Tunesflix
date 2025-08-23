@@ -1,0 +1,18 @@
+:root {
+  --tf-max-width: 1280px;
+  --tf-gutter: 1rem;
+  --tf-muted: #666;
+}
+
+.tf-main {
+  max-width: var(--tf-max-width);
+  margin: 0 auto;
+  padding: var(--tf-gutter);
+}
+
+.tf-search-section {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center; /* centraliza a search bar */
+  align-items: center;
+}
