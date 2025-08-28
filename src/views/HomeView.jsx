@@ -17,10 +17,24 @@ export default function HomeView({
   favorites,
   onToggleFavorite,
   onDetails,
+  category,
+  onCategoryChange,
 }) {
   return (
     <>
       <section className="tf-search-section">
+        <div className="tf-category-selector">
+          <label htmlFor="category-select">Categoria:</label>
+          <select
+            id="category-select"
+            value={category}
+            onChange={(e) => onCategoryChange(e.target.value)}
+          >
+            <option value="popular">Populares</option>
+            <option value="top-rated">Mais Avaliados</option>
+            <option value="now-playing">Em Cartaz</option>
+          </select>
+        </div>
         <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
       </section>
 
@@ -41,8 +55,20 @@ export default function HomeView({
         totalPages={totalPages}
         onPrev={prevPage}
         onNext={nextPage}
-        label={query && query.trim() ? 'Busca' : 'Populares'}
+        label={query && query.trim() ? 'Busca' : getCategoryLabel(category)}
       />
     </>
   );
+}
+
+function getCategoryLabel(category) {
+  switch (category) {
+    case 'top-rated':
+      return 'Mais Avaliados';
+    case 'now-playing':
+      return 'Em Cartaz';
+    case 'popular':
+    default:
+      return 'Populares';
+  }
 }

@@ -25,6 +25,8 @@ function App() {
     totalPages,
     reset,
     fetchDefault,
+    category,
+    setCategory,
   } = useTmdbSearch();
   // favorites moved to FavoritesContext
   const { favorites, toggleFavorite } = useFavorites();
@@ -36,12 +38,9 @@ function App() {
 
   // Removed saving favorites to local storage
 
-  // demo: se não houver query e existir chave do TMDB, executa uma busca inicial
+  // demo: se não houver query, executa uma busca inicial
   useEffect(() => {
-    const hasKey = Boolean(
-      import.meta.env.VITE_TMDB_API_KEY || import.meta.env.VITE_TMDB_READ_ACCESS_TOKEN
-    );
-    if (!query && hasKey) {
+    if (!query) {
       // busca inicial suave para ver a lista funcionando
       search('matrix');
     }
@@ -62,7 +61,7 @@ function App() {
     setModalDetails(null);
     setModalError(null);
     try {
-      const data = await getMovieDetails(film.id, 'credits');
+      const data = await getMovieDetails(film.id);
       setModalDetails(data);
     } catch (err) {
       setModalError(err);
@@ -100,6 +99,8 @@ function App() {
             favorites={favorites}
             onToggleFavorite={handleToggleFavorite}
             onDetails={handleDetails}
+            category={category}
+            onCategoryChange={setCategory}
           />
         )}
 

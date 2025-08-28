@@ -11,6 +11,24 @@ vi.mock('../services/tmdb', () => ({
     total_pages: 1,
     total_results: 1,
   })),
+  fetchPopularMovies: vi.fn(async (page) => ({
+    results: [{ id: 20, title: 'Popular Movie' }],
+    page,
+    total_pages: 1,
+    total_results: 1,
+  })),
+  fetchTopRatedMovies: vi.fn(async (page) => ({
+    results: [{ id: 30, title: 'Top Rated Movie' }],
+    page,
+    total_pages: 1,
+    total_results: 1,
+  })),
+  fetchNowPlayingMovies: vi.fn(async (page) => ({
+    results: [{ id: 40, title: 'Now Playing Movie' }],
+    page,
+    total_pages: 1,
+    total_results: 1,
+  })),
 }));
 
 function TestComp() {

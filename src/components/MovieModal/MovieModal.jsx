@@ -37,6 +37,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
           <div className="tf-modal__content">
             <div className="tf-modal__header">
               <h2>{details.title || details.name}</h2>
+              {details.tagline && <p className="tf-modal__tagline">"{details.tagline}"</p>}
               <div className="tf-modal__meta">
                 {details.release_date ? new Date(details.release_date).getFullYear() : ''} •{' '}
                 {details.runtime ? details.runtime + ' min' : ''}
@@ -55,22 +56,19 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
               <div className="tf-modal__info">
                 <p className="tf-modal__overview">{details.overview}</p>
 
-                <p>
-                  <strong>Diretor:</strong>{' '}
-                  {(() => {
-                    const crew = details.credits?.crew || [];
-                    const dir = crew.find((c) => c.job === 'Director');
-                    return dir ? dir.name : '—';
-                  })()}
-                </p>
+                {details.genres && details.genres.length > 0 && (
+                  <p>
+                    <strong>Gêneros:</strong>{' '}
+                    {details.genres.map((g) => g.name).join(', ')}
+                  </p>
+                )}
 
-                <p>
-                  <strong>Elenco:</strong>{' '}
-                  {(details.credits?.cast || [])
-                    .slice(0, 6)
-                    .map((c) => c.name)
-                    .join(', ') || '—'}
-                </p>
+                {details.production_companies && details.production_companies.length > 0 && (
+                  <p>
+                    <strong>Produção:</strong>{' '}
+                    {details.production_companies.map((c) => c.name).join(', ')}
+                  </p>
+                )}
 
                 <p>
                   <strong>Avaliação:</strong>{' '}

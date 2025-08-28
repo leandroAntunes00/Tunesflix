@@ -1,12 +1,45 @@
-# React + Vite
+# Tunesflix
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um aplicativo React para descobrir e gerenciar filmes favoritos, construído com Vite.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔍 Busca de filmes por título
+- 📋 Lista de filmes populares
+- ❤️ Sistema de favoritos
+- 📱 Design responsivo
+- 🎬 Modal com detalhes dos filmes
 
-## Expanding the ESLint configuration
+## Configuração
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone o repositório
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Configure as variáveis de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+   Edite o `.env` com sua configuração da API.
+
+4. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
+
+## API
+
+O projeto utiliza uma API customizada compatível com TMDB. Configure `VITE_API` no arquivo `.env` para apontar para sua instância da API.
+
+### Endpoints utilizados:
+- `GET /api/movies/search?q={query}&page={page}` - Busca de filmes
+- `GET /api/movies/popular?page={page}` - Filmes populares
+- `GET /api/movies/{id}` - Detalhes do filme
+
+## Scripts disponíveis
+
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Build para produção
+- `npm run preview` - Preview do build
+- `npm test` - Executa os testes
