@@ -1,11 +1,12 @@
 import React from 'react';
 import './Header.css';
+import logo from '../../assets/logo.png';
 
 export default function Header({ onNavigate = () => {}, active = 'home' }) {
   return (
     <header className="tf-header">
       <div className="tf-header__inner">
-        <h1
+        <div
           className="tf-brand"
           role="button"
           tabIndex={0}
@@ -15,8 +16,9 @@ export default function Header({ onNavigate = () => {}, active = 'home' }) {
             if (e.key === 'Enter' || e.key === ' ') onNavigate('home');
           }}
         >
-          Tunesflix
-        </h1>
+          <img src={logo} alt="Tunesflix" className="tf-brand__logo" />
+          <span className="tf-brand__name">Tunesflix</span>
+        </div>
         <nav className="tf-nav" aria-label="Main navigation">
           <button
             type="button"

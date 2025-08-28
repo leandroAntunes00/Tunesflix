@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './CardFilm.css';
 
 // Props:
@@ -23,21 +23,45 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
       : `https://image.tmdb.org/t/p/w342${posterPath}`
     : null;
 
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const showPoster = Boolean(posterSrc) && !imgError;
+
+  const rating = film.vote_average ? Number(film.vote_average).toFixed(1) : null;
+
   return (
-    <article className="tf-card">
-      <div className="tf-card__media">
-        {posterSrc ? (
-          <img src={posterSrc} alt={`${title} poster`} className="tf-card__poster" />
+    <article className="tf-card tf-card--vertical" aria-labelledby={`title-${film.id}`}>
+      <figure className="tf-card__figure">
+        {showPoster ? (
+          <img
+            src={posterSrc}
+            alt={`${title} poster`}
+            className={`tf-card__poster ${!imgLoaded ? 'loading' : 'loaded'}`}
+            loading="lazy"
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
+          />
         ) : (
           <div className="tf-card__placeholder" aria-hidden>
             Sem imagem
           </div>
         )}
-      </div>
+
+        <div className="tf-card__overlay">
+          {rating && <span className="tf-badge">{rating}</span>}
+          {year && <span className="tf-year">{year}</span>}
+        </div>
+      </figure>
 
       <div className="tf-card__body">
-        <h3 className="tf-card__title">{title}</h3>
-        <p className="tf-card__meta">{year}</p>
+        <h3 id={`title-${film.id}`} className="tf-card__title">
+          {title}
+        </h3>
+        <p className="tf-card__meta">
+          {film.overview
+            ? `${film.overview.slice(0, 110)}${film.overview.length > 110 ? '…' : ''}`
+            : ''}
+        </p>
 
         <div className="tf-card__actions">
           <button
@@ -56,7 +80,7 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
               isFavorite ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`
             }
           >
-            {isFavorite ? '★ Favorito' : '☆ Favoritar'}
+            {isFavorite ? '★' : '☆'}
           </button>
         </div>
       </div>

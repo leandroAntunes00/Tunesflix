@@ -1,0 +1,57 @@
+.tf-category-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.tf-category-selector__label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.tf-category-selector__wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tf-category-selector__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.tf-category-selector__select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0.55rem 0.8rem;
+  padding-right: 2.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  font-weight: 600;
+  min-width: 160px;
+}
+.tf-category-selector__select:focus {
+  outline: none;
+  box-shadow: 0 8px 20px rgba(124, 92, 255, 0.06);
+}
+
+/* garantir que as options tenham fundo escuro e texto claro */
+.tf-category-selector__select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* melhorar visibilidade do arrow nativo em alguns navegadores */
+.tf-category-selector__select::-ms-expand {
+  display: none;
+}
+
+@media (max-width: 520px) {
+  .tf-category-selector__select {
+    min-width: 120px;
+  }
+}

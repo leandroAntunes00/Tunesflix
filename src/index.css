@@ -50,3 +50,67 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+/* Theme variables */
+:root {
+  --bg-900: #04101a;
+  --bg-800: #071021;
+  --surface: #0f1724;
+  --card: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  /* acentos mais discretos: tons suaves e menos saturados */
+  --accent: #5260a3; /* azul acinzentado */
+  --accent-2: #394f7a; /* azul mais escuro e discreto */
+  --muted: #9aa6b2;
+  --text: #e6eef8;
+  --glass: rgba(255, 255, 255, 0.04);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --card-shadow: 0 10px 30px rgba(2, 6, 23, 0.45);
+  --transition-fast: 180ms;
+  --max-width: 1200px;
+  --gutter: 1.25rem;
+}
+
+/* Base styles */
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: linear-gradient(180deg, var(--bg-900), var(--bg-800) 60%);
+  color: var(--text);
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.app-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem var(--gutter);
+}
+
+/* Utility helpers */
+.muted {
+  color: var(--muted);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

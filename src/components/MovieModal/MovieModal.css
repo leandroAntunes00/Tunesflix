@@ -28,16 +28,20 @@
   color: #fff;
   padding: 6px 10px;
   border-radius: 6px;
+  z-index: 12;
 }
 .tf-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  /* garantir que meta nao colid a com o botao fechar */
+  padding-right: 48px; /* distancia extra para o canto direito */
 }
 .tf-modal__meta {
   color: #cfcfcf;
   font-size: 0.95rem;
+  margin-left: 0.6rem;
 }
 .tf-modal__body {
   display: flex;
