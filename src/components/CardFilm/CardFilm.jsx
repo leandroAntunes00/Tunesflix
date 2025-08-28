@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { tmdbImage } from '../../services/tmdb';
 import './CardFilm.css';
 
 // Props:
@@ -6,7 +7,13 @@ import './CardFilm.css';
 // - onDetails(film)
 // - onToggleFavorite(film)
 // - isFavorite: boolean
-export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFavorite = false }) {
+// Props:
+// - film: object with { id, title, name, release_date, first_air_date, poster_path }
+// - onDetails(film)
+// - onToggleFavorite(film)
+// - isFavorite: boolean
+// - onNavigate(type, film)
+export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFavorite = false, onNavigate }) {
   const title = film.title || film.name || 'Sem título';
   const date = film.release_date || film.first_air_date || '';
   let year = '';
@@ -17,11 +24,7 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
 
   // suporte a caminho do TMDB ou URL completo
   const posterPath = film.poster_path || film.poster || film.posterPath || '';
-  const posterSrc = posterPath
-    ? posterPath.startsWith('http')
-      ? posterPath
-      : `https://image.tmdb.org/t/p/w342${posterPath}`
-    : null;
+  const posterSrc = posterPath ? tmdbImage(posterPath, 'w342') : null;
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -61,8 +64,14 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
       className={`tf-card tf-card--vertical ${isVisible ? 'is-visible' : ''}`}
       aria-labelledby={`title-${film.id}`}
       tabIndex={0}
+      onClick={() => {
+        if (onNavigate) onNavigate('detail', film);
+      }}
       onKeyDown={(e) => {
-        if (e.key === 'Enter') onDetails && onDetails(film);
+        if (e.key === 'Enter') {
+          if (onNavigate) onNavigate('detail', film);
+          else onDetails && onDetails(film);
+        }
       }}
     >
       <figure className="tf-card__figure">
@@ -91,12 +100,15 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
         <h3 id={`title-${film.id}`} className="tf-card__title">
           {title}
         </h3>
-  <p className="tf-card__meta">{film.overview || ''}</p>
+        <p className="tf-card__meta">{film.overview || ''}</p>
 
         <div className="tf-card__actions">
           <button
             className="tf-btn tf-btn--primary"
-            onClick={() => onDetails && onDetails(film)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDetails && onDetails(film);
+            }}
             aria-label={`Ver detalhes de ${title}`}
           >
             Detalhes
@@ -104,7 +116,10 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
 
           <button
             className={`tf-btn tf-btn--ghost ${isFavorite ? 'is-fav' : ''}`}
-            onClick={() => onToggleFavorite && onToggleFavorite(film)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite && onToggleFavorite(film);
+            }}
             aria-pressed={isFavorite}
             aria-label={
               isFavorite ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`

@@ -21,15 +21,16 @@ export default function HomeView({
   onDetails,
   category,
   onCategoryChange,
+  onNavigate,
 }) {
   return (
     <div className="app-container">
-  <section className="tf-search-section">
+      <section className="tf-search-section">
         <CategorySelector value={category} onChange={(v) => onCategoryChange(v)} />
         <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
       </section>
 
-  {error && <div className="tf-error">Erro: {error.message}</div>}
+      {error && <div className="tf-error">Erro: {error.message}</div>}
 
       <HomeHeader query={query} category={category} />
 
@@ -37,6 +38,7 @@ export default function HomeView({
         items={results}
         onToggleFavorite={onToggleFavorite}
         onDetails={onDetails}
+        onNavigate={onNavigate}
         favorites={favorites}
         loading={loading}
       />

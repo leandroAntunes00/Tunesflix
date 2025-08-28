@@ -14,6 +14,7 @@ export default function CardList({
   onToggleFavorite,
   favorites = new Set(),
   loading = false,
+  onNavigate,
 }) {
   if (loading) {
     // render some skeleton placeholders
@@ -38,6 +39,7 @@ export default function CardList({
           film={item}
           onDetails={onDetails}
           onToggleFavorite={onToggleFavorite}
+          onNavigate={onNavigate}
           isFavorite={favorites.has ? favorites.has(item.id) : Boolean(favorites[item.id])}
         />
       ))}

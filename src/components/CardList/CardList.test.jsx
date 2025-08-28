@@ -3,6 +3,7 @@ import { test, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CardList from './CardList';
+import { MemoryRouter } from 'react-router-dom';
 
 const films = [
   { id: 1, title: 'Filme A', release_date: '2020-05-01' },
@@ -15,12 +16,14 @@ test('CardList renderiza itens e repassa handlers', async () => {
   const onToggleFavorite = vi.fn();
 
   render(
-    <CardList
-      items={films}
-      onDetails={onDetails}
-      onToggleFavorite={onToggleFavorite}
-      favorites={new Set([2])}
-    />
+    <MemoryRouter>
+      <CardList
+        items={films}
+        onDetails={onDetails}
+        onToggleFavorite={onToggleFavorite}
+        favorites={new Set([2])}
+      />
+    </MemoryRouter>
   );
 
   // deve mostrar os títulos

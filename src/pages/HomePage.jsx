@@ -3,9 +3,9 @@ import useMovies from '../hooks/useMovies';
 import { useFavorites } from '../hooks/useFavorites';
 import HomeView from '../views/HomeView';
 import MovieModal from '../components/MovieModal/MovieModal';
-import { getMovieDetails } from '../services/tmdb';
+import { getMovieDetails, withTimeout } from '../services/tmdb';
 
-export default function HomePage() {
+export default function HomePage({ onNavigate }) {
   const {
     category,
     searchQuery,
@@ -42,13 +42,10 @@ export default function HomePage() {
     setModalError(null);
     try {
       // Protege contra chamadas que nunca retornam com um timeout
-      const timeout = (ms) =>
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Requisição expirou')), ms));
-
-      const data = await Promise.race([getMovieDetails(film.id), timeout(8000)]);
+      const data = await withTimeout(getMovieDetails(film.id), 8000);
 
       // Validar formato esperado
-      if (!data || (typeof data !== 'object') || (!data.id && !data.title && !data.name)) {
+      if (!data || typeof data !== 'object' || (!data.id && !data.title && !data.name)) {
         throw new Error('Resposta de detalhes inválida');
       }
 
@@ -78,6 +75,7 @@ export default function HomePage() {
         onDetails={handleDetails}
         category={category}
         onCategoryChange={changeCategory}
+        onNavigate={onNavigate}
       />
 
       <MovieModal

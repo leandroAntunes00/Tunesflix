@@ -10,9 +10,7 @@ vi.mock('./hooks/useMovies', () => ({
     category: 'popular',
     searchQuery: '',
     isSearching: false,
-    results: [
-      { id: 99, title: 'App Test Movie', release_date: '2020-01-01', poster_path: null },
-    ],
+    results: [{ id: 99, title: 'App Test Movie', release_date: '2020-01-01', poster_path: null }],
     loading: false,
     error: null,
     page: 1,
@@ -28,11 +26,16 @@ vi.mock('./hooks/useMovies', () => ({
 vi.mock('./services/tmdb', async () => {
   return {
     __esModule: true,
-    getMovieDetails: vi.fn().mockResolvedValue({ id: 99, title: 'App Test Movie', overview: 'Details' }),
+    getMovieDetails: vi
+      .fn()
+      .mockResolvedValue({ id: 99, title: 'App Test Movie', overview: 'Details' }),
+    // withTimeout is used by HomePage; provide a simple passthrough for tests
+    withTimeout: (p) => p,
   };
 });
 
 import App from './App';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('App modal flow', () => {
   beforeEach(() => {});
@@ -42,7 +45,11 @@ describe('App modal flow', () => {
 
   it('abre modal ao clicar em Detalhes e mostra conteudo', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <App />
+      </MemoryRouter>
+    );
 
     // encontrar botão Detalhes do card
     const btn = await screen.findByRole('button', { name: /detalhes/i });

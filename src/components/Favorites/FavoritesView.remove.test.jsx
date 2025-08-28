@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { test, expect } from 'vitest';
 import { FavoritesProvider } from '../../contexts/FavoritesContext';
 import FavoritesView from './FavoritesView';
+import { MemoryRouter } from 'react-router-dom';
 
 test('FavoritesView permite remover favorito via contexto', async () => {
   const key = 'tunesflix:favorites-v2';
@@ -14,9 +15,11 @@ test('FavoritesView permite remover favorito via contexto', async () => {
 
   const user = userEvent.setup();
   render(
-    <FavoritesProvider>
-      <FavoritesView />
-    </FavoritesProvider>
+    <MemoryRouter>
+      <FavoritesProvider>
+        <FavoritesView />
+      </FavoritesProvider>
+    </MemoryRouter>
   );
 
   expect(screen.getByText('Removable Movie')).toBeInTheDocument();

@@ -58,10 +58,62 @@ export async function getMovieDetails(id) {
   return safeFetch(url);
 }
 
+// Simple in-memory cache for details prefetching
+const DETAILS_CACHE = new Map();
+
+export async function prefetchMovieDetails(id) {
+  if (!id) return null;
+  if (DETAILS_CACHE.has(id)) return DETAILS_CACHE.get(id);
+  try {
+    const p = getMovieDetails(id).then((d) => {
+      DETAILS_CACHE.set(id, d);
+      return d;
+    });
+    DETAILS_CACHE.set(id, p);
+    return p;
+  } catch {
+    // swallow prefetch errors
+    return null;
+  }
+}
+
+// Helper para construir URLs de imagem do TMDB
+export function tmdbImage(path, size = 'w342') {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+  const base = 'https://image.tmdb.org/t/p';
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${base}/${size}${p}`;
+}
+
+// Presets convenientes
+export const TMDB_SIZES = {
+  POSTER: 'w342',
+  BACKDROP: 'w780',
+};
+
+export function posterImage(path) {
+  return tmdbImage(path, TMDB_SIZES.POSTER);
+}
+
+export function backdropImage(path) {
+  return tmdbImage(path, TMDB_SIZES.BACKDROP);
+}
+
+// Helper genérico para aplicar timeout em promises
+export function withTimeout(promise, ms = 8000, message = 'Requisição expirou') {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
+
 export default {
   searchMovies,
   getMovieDetails,
   fetchPopularMovies,
   fetchTopRatedMovies,
   fetchNowPlayingMovies,
+  tmdbImage,
 };
+

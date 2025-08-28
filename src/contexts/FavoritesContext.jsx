@@ -26,6 +26,8 @@ export function FavoritesProvider({ children }) {
           title: film.title || film.name,
           poster_path: film.poster_path || film.poster,
           release_date: film.release_date || film.first_air_date,
+          // preserve a short overview/description when available so favorites can show it
+          overview: film.overview || film.description || null,
         };
       return next;
     });

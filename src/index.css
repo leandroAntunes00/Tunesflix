@@ -110,10 +110,10 @@ body {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--accent-start), var(--accent-end));
   border-radius: 10px;
-  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.18);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18);
 }
 ::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.02);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .app-container {

@@ -14,15 +14,20 @@ describe('tmdb service', () => {
 
   it('builds urls and parses json on success', async () => {
     const mockRes = { results: [1, 2, 3] };
-  globalThis.fetch.mockResolvedValueOnce({ ok: true, json: async () => mockRes });
+    globalThis.fetch.mockResolvedValueOnce({ ok: true, json: async () => mockRes });
 
     const out = await tmdb.fetchPopularMovies(2);
     expect(out).toEqual(mockRes);
-  expect(globalThis.fetch).toHaveBeenCalled();
+    expect(globalThis.fetch).toHaveBeenCalled();
   });
 
   it('throws when fetch returns non-ok', async () => {
-  globalThis.fetch.mockResolvedValueOnce({ ok: false, status: 500, statusText: 'Err', text: async () => '{}' });
+    globalThis.fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: 'Err',
+      text: async () => '{}',
+    });
     await expect(tmdb.fetchPopularMovies()).rejects.toThrow(/API request failed/);
   });
 
@@ -39,7 +44,12 @@ describe('tmdb service', () => {
   });
 
   it('parses JSON error body and includes status_message in error', async () => {
-    globalThis.fetch.mockResolvedValueOnce({ ok: false, status: 400, statusText: 'Bad', text: async () => '{"status_message":"boom"}' });
+    globalThis.fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      statusText: 'Bad',
+      text: async () => '{"status_message":"boom"}',
+    });
     await expect(tmdb.fetchPopularMovies()).rejects.toThrow(/boom/);
   });
 

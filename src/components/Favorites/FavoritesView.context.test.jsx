@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { test, expect } from 'vitest';
 import { FavoritesProvider } from '../../contexts/FavoritesContext';
 import FavoritesView from './FavoritesView';
+import { MemoryRouter } from 'react-router-dom';
 
 test('FavoritesView consome o contexto quando props nao fornecidas', () => {
   // preparar localStorage com alguns favoritos
@@ -14,9 +15,11 @@ test('FavoritesView consome o contexto quando props nao fornecidas', () => {
   localStorage.setItem(key, JSON.stringify(stored));
 
   render(
-    <FavoritesProvider>
-      <FavoritesView />
-    </FavoritesProvider>
+    <MemoryRouter>
+      <FavoritesProvider>
+        <FavoritesView />
+      </FavoritesProvider>
+    </MemoryRouter>
   );
 
   expect(screen.getByText('Context Fav 10')).toBeInTheDocument();
