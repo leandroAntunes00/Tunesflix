@@ -21,7 +21,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
   return (
     <div className="tf-modal__backdrop" onClick={onClose} role="presentation">
       <div
-        className="tf-modal"
+        className={`tf-modal ${open ? 'is-open' : ''}`}
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
