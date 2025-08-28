@@ -58,8 +58,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
 
                 {details.genres && details.genres.length > 0 && (
                   <p>
-                    <strong>Gêneros:</strong>{' '}
-                    {details.genres.map((g) => g.name).join(', ')}
+                    <strong>Gêneros:</strong> {details.genres.map((g) => g.name).join(', ')}
                   </p>
                 )}
 
