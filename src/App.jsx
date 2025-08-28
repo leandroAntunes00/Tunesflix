@@ -1,19 +1,33 @@
 import { useEffect, useState, useCallback } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import useTmdbSearch from './hooks/useTmdbSearch';
-import CardList from './components/CardList/CardList';
+import useMovies from './hooks/useMovies';
+import './App.css';
 import FavoritesView from './components/Favorites/FavoritesView';
 import MovieModal from './components/MovieModal/MovieModal';
 import { getMovieDetails } from './services/tmdb';
-import SearchBar from './components/SearchBar/SearchBar';
+import HomeView from './views/HomeView';
 
 // Removed internal favorites logic
 import { useFavorites } from './hooks/useFavorites';
 
 function App() {
-  const { query, search, results, loading, error, page, nextPage, prevPage, totalPages } =
-    useTmdbSearch();
+  const {
+    category,
+    searchQuery,
+    isSearching,
+    results,
+    loading,
+    error,
+    page,
+    nextPage,
+    prevPage,
+    totalPages,
+    changeCategory,
+    search,
+    reset,
+  } = useMovies();
+
   // favorites moved to FavoritesContext
   const { favorites, toggleFavorite } = useFavorites();
   const [view, setView] = useState('home');
@@ -22,16 +36,11 @@ function App() {
   const [modalDetails, setModalDetails] = useState(null);
   const [modalError, setModalError] = useState(null);
 
-  // Removed saving favorites to local storage
-
-  // demo: se não houver query e existir chave do TMDB, executa uma busca inicial
+  // Inicialização: carrega a categoria padrão quando o app inicia
   useEffect(() => {
-    const hasKey = Boolean(
-      import.meta.env.VITE_TMDB_API_KEY || import.meta.env.VITE_TMDB_READ_ACCESS_TOKEN
-    );
-    if (!query && hasKey) {
-      // busca inicial suave para ver a lista funcionando
-      search('matrix');
+    if (results.length === 0 && !isSearching) {
+      // Carrega a categoria padrão (popular)
+      changeCategory('popular');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -50,7 +59,7 @@ function App() {
     setModalDetails(null);
     setModalError(null);
     try {
-      const data = await getMovieDetails(film.id, 'credits');
+      const data = await getMovieDetails(film.id);
       setModalDetails(data);
     } catch (err) {
       setModalError(err);
@@ -67,51 +76,30 @@ function App() {
           if (v === 'home') {
             // limpar query e carregar lista padrão (populares)
             reset();
-            fetchDefault();
+            changeCategory('popular');
           }
         }}
         active={view}
       />
 
-      <main style={{ maxWidth: 1280, margin: '0 auto', padding: '1rem' }}>
-        <section style={{ marginBottom: '1rem' }}>
-          <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
-        </section>
-
+      <main className="tf-main">
         {view === 'home' && (
-          <>
-            {loading && <div>Carregando...</div>}
-            {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
-
-            <CardList
-              items={results}
-              onToggleFavorite={handleToggleFavorite}
-              onDetails={handleDetails}
-              favorites={favorites}
-            />
-
-            {totalPages > 1 && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: 12,
-                }}
-              >
-                <button onClick={prevPage} disabled={page <= 1}>
-                  Anterior
-                </button>
-                <span>
-                  {page} / {totalPages}
-                </span>
-                <button onClick={nextPage} disabled={page >= totalPages}>
-                  Próxima
-                </button>
-              </div>
-            )}
-          </>
+          <HomeView
+            query={searchQuery}
+            search={search}
+            results={results}
+            loading={loading}
+            error={error}
+            page={page}
+            nextPage={nextPage}
+            prevPage={prevPage}
+            totalPages={totalPages}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
+            onDetails={handleDetails}
+            category={category}
+            onCategoryChange={changeCategory}
+          />
         )}
 
         {view === 'favorites' && (
@@ -138,5 +126,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;

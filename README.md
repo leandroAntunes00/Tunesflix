@@ -1,12 +1,61 @@
-# React + Vite
+# Tunesflix
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um aplicativo React para descobrir e gerenciar filmes favoritos, construído com Vite.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔍 Busca de filmes por título
+- 📋 Listas de filmes por categoria:
+  - Populares
+  - Mais Avaliados
+  - Em Cartaz
+- ❤️ Sistema de favoritos
+- 📱 Design responsivo
+- 🎬 Modal com detalhes completos dos filmes
 
-## Expanding the ESLint configuration
+## Arquitetura
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+O projeto utiliza uma arquitetura modular com hooks especializados:
+
+### Hooks Principais
+- `useMovies` - Hook principal que gerencia todas as categorias e buscas
+- `usePopularMovies` - Gerencia filmes populares
+- `useTopRatedMovies` - Gerencia filmes mais avaliados
+- `useNowPlayingMovies` - Gerencia filmes em cartaz
+- `useMovieSearch` - Gerencia buscas por texto
+- `useMovieDetails` - Gerencia detalhes de filmes específicos
+
+### API Endpoints
+- `GET /api/movies/search?q={query}&page={page}` - Busca de filmes
+- `GET /api/movies/popular?page={page}` - Filmes populares
+- `GET /api/movies/top-rated?page={page}` - Filmes mais avaliados
+- `GET /api/movies/now-playing?page={page}` - Filmes em cartaz
+- `GET /api/movies/{id}` - Detalhes completos do filme
+
+## Configuração
+
+1. Clone o repositório
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Configure as variáveis de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+   Edite o `.env` com sua configuração da API:
+   ```env
+   VITE_API=http://localhost:3000
+   ```
+
+4. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
+
+## Scripts disponíveis
+
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Build para produção
+- `npm run preview` - Preview do build
+- `npm run test` - Executa os testes

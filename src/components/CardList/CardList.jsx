@@ -1,5 +1,6 @@
 import React from 'react';
 import CardFilm from '../CardFilm/CardFilm';
+import SkeletonCard from './SkeletonCard';
 import './CardList.css';
 
 // Props:
@@ -12,7 +13,19 @@ export default function CardList({
   onDetails,
   onToggleFavorite,
   favorites = new Set(),
+  loading = false,
 }) {
+  if (loading) {
+    // render some skeleton placeholders
+    return (
+      <section className="tf-list" aria-live="polite">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SkeletonCard key={`s-${i}`} />
+        ))}
+      </section>
+    );
+  }
+
   if (!items || items.length === 0) {
     return <div className="tf-empty">Nenhum resultado</div>;
   }

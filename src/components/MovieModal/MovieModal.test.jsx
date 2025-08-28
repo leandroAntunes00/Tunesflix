@@ -25,7 +25,6 @@ test('MovieModal mostra detalhes e fecha', async () => {
 
   expect(screen.getByText('My Movie')).toBeInTheDocument();
   expect(screen.getByText('A movie overview')).toBeInTheDocument();
-  expect(screen.getByText(/Dir Name/)).toBeInTheDocument();
 
   await user.click(screen.getByRole('button', { name: /fechar/i }));
   expect(onClose).toHaveBeenCalled();

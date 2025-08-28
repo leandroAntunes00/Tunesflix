@@ -1,7 +1,7 @@
 .tf-list {
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   /* garante espaço mínimo para que, com poucos cards, o footer não suba */
   min-height: calc(100vh - var(--site-header-footer-height, 220px));
   align-content: start;
@@ -14,8 +14,38 @@
 }
 @media (min-width: 980px) {
   .tf-list {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
+}
+
+/* skeleton styles */
+.tf-skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.06));
+  border-radius: 6px;
+  display: inline-block;
+}
+.tf-card--skeleton {
+  opacity: 0.9;
+}
+.tf-card__title.tf-skeleton {
+  height: 16px;
+  width: 60%;
+  margin: 8px 0;
+}
+.tf-card__meta.tf-skeleton {
+  height: 12px;
+  width: 40%;
+  margin-bottom: 12px;
+}
+.tf-skeleton.small {
+  height: 28px;
+  width: 64px;
+  display: inline-block;
+}
+.tf-card__poster.tf-skeleton {
+  width: 84px;
+  height: 126px;
+  border-radius: 6px;
 }
 
 .tf-empty {

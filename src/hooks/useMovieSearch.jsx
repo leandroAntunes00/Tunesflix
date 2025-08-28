@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback } from 'react';
-import { searchMovies, fetchPopularMovies } from '../services/tmdb';
+import { searchMovies } from '../services/tmdb';
 
-// Hook para buscar filmes no TMDB com paginação
-export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
+// Hook para buscar filmes por query
+export default function useMovieSearch(initialQuery = '', initialPage = 1) {
   const [query, setQuery] = useState(initialQuery);
   const [page, setPage] = useState(initialPage);
   const [results, setResults] = useState([]);
@@ -14,10 +14,8 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
   // request id para evitar condições de corrida
   const requestRef = useRef(0);
 
-  const fetchPage = useCallback(async (q, p = 1, opts = {}) => {
+  const search = useCallback(async (q, p = 1) => {
     const trimmed = (q || '').trim();
-    // se query vazio, retorna undefined para indicar que o chamador pode
-    // optar por carregar a lista padrão (populares)
     if (!trimmed) {
       setResults([]);
       setTotalPages(0);
@@ -25,7 +23,7 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
       setPage(1);
       setError(null);
       setLoading(false);
-      return undefined;
+      return;
     }
 
     const thisRequest = ++requestRef.current;
@@ -33,7 +31,7 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
     setError(null);
 
     try {
-      const res = await searchMovies(trimmed, p, opts.includeAdult);
+      const res = await searchMovies(trimmed, p);
       // ignorar respostas antigas
       if (thisRequest !== requestRef.current) return;
 
@@ -41,34 +39,7 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
       setTotalPages(res.total_pages || 0);
       setTotalResults(res.total_results || 0);
       setPage(res.page || p);
-    } catch (err) {
-      if (thisRequest !== requestRef.current) return;
-      setError(err);
-    } finally {
-      if (thisRequest === requestRef.current) setLoading(false);
-    }
-  }, []);
-
-  const search = useCallback(
-    (q, opts = {}) => {
-      setQuery(q);
-      // iniciar pela página 1
-      fetchPage(q, 1, opts);
-    },
-    [fetchPage]
-  );
-
-  const fetchDefault = useCallback(async (p = 1) => {
-    const thisRequest = ++requestRef.current;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetchPopularMovies(p);
-      if (thisRequest !== requestRef.current) return;
-      setResults(res.results || []);
-      setTotalPages(res.total_pages || 0);
-      setTotalResults(res.total_results || 0);
-      setPage(res.page || p);
+      setQuery(trimmed);
     } catch (err) {
       if (thisRequest !== requestRef.current) return;
       setError(err);
@@ -78,17 +49,15 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
   }, []);
 
   const goToPage = useCallback(
-    (p, opts = {}) => {
-      // evita paginação inválida
-      if (!query || !query.trim()) return;
+    (p) => {
       const target = Math.max(1, Math.floor(p));
-      fetchPage(query, target, opts);
+      search(query, target);
     },
-    [fetchPage, query]
+    [search, query]
   );
 
-  const nextPage = useCallback((opts = {}) => goToPage(page + 1, opts), [goToPage, page]);
-  const prevPage = useCallback((opts = {}) => goToPage(page - 1, opts), [goToPage, page]);
+  const nextPage = useCallback(() => goToPage(page + 1), [goToPage, page]);
+  const prevPage = useCallback(() => goToPage(page - 1), [goToPage, page]);
 
   const reset = useCallback(() => {
     requestRef.current++;
@@ -115,7 +84,5 @@ export default function useTmdbSearch(initialQuery = '', initialPage = 1) {
     loading,
     error,
     reset,
-    fetchPage, // exposto para casos avançados
-    fetchDefault,
   };
 }

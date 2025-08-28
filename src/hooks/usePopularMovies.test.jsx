@@ -2,22 +2,22 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { test, vi, expect } from 'vitest';
-import useTmdbSearch from './useTmdbSearch';
+import usePopularMovies from './usePopularMovies';
 
 vi.mock('../services/tmdb', () => ({
-  searchMovies: vi.fn(async (q, page) => ({
-    results: [{ id: 10, title: `Result for ${q}` }],
+  fetchPopularMovies: vi.fn(async (page) => ({
+    results: [{ id: 20, title: 'Popular Movie' }],
     page,
-    total_pages: 1,
-    total_results: 1,
+    total_pages: 10,
+    total_results: 200,
   })),
 }));
 
 function TestComp() {
-  const { results, loading, search } = useTmdbSearch();
+  const { results, loading, fetchMovies } = usePopularMovies();
   return (
     <div>
-      <button onClick={() => search('abc')}>go</button>
+      <button onClick={() => fetchMovies(1)}>load</button>
       <div data-testid="loading">{String(loading)}</div>
       <ul>
         {results.map((r) => (
@@ -28,13 +28,12 @@ function TestComp() {
   );
 }
 
-test('useTmdbSearch busca e popula resultados', async () => {
+test('usePopularMovies carrega e popula resultados', async () => {
   const user = userEvent.setup();
   render(<TestComp />);
 
   expect(screen.getByTestId('loading').textContent).toBe('false');
-  await user.click(screen.getByRole('button', { name: /go/i }));
+  await user.click(screen.getByRole('button', { name: /load/i }));
 
-  // aguardar renderização do resultado
-  expect(await screen.findByText('Result for abc')).toBeInTheDocument();
+  expect(await screen.findByText('Popular Movie')).toBeInTheDocument();
 });
