@@ -3,7 +3,6 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import useMovies from './hooks/useMovies';
 import './App.css';
-import CardList from './components/CardList/CardList';
 import FavoritesView from './components/Favorites/FavoritesView';
 import MovieModal from './components/MovieModal/MovieModal';
 import { getMovieDetails } from './services/tmdb';
