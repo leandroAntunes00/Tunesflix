@@ -4,18 +4,23 @@
   flex-direction: column;
   gap: 0.6rem;
   background: var(--card);
-  padding: 0.6rem;
+  padding: 0.4rem; /* reduzir padding para ocupar mais espaço visual */
   border-radius: var(--radius-md);
   box-shadow: var(--card-shadow);
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
   overflow: hidden;
+  width: 100%;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(6px) scale(0.998);
 }
 
 .tf-card--vertical:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 28px 60px rgba(2, 6, 23, 0.7);
+  transform: translateY(-10px) scale(1.01);
+  box-shadow: 0 28px 60px rgba(2, 6, 23, 0.72);
 }
 
 .tf-card__figure {
@@ -27,7 +32,7 @@
 
 .tf-card__poster {
   width: 100%;
-  height: 320px;
+  aspect-ratio: 2 / 3; /* preserva proporção do poster e evita cortes */
   object-fit: cover;
   display: block;
   transition:
@@ -43,9 +48,16 @@
   transform: scale(1);
 }
 
+/* small entrance animation for grid items */
+.tf-card.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
+}
+
 .tf-card__placeholder {
   width: 100%;
-  height: 320px;
+  aspect-ratio: 2 / 3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,7 +95,8 @@
 .tf-card__body {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  padding: 0.2rem 0; /* reduzir espaçamento interno para aproveitar espaço */
 }
 .tf-card__title {
   margin: 0;
@@ -91,12 +104,21 @@
   font-weight: 700;
   line-height: 1.15;
   color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .tf-card__meta {
   margin: 0;
   color: var(--muted);
   font-size: 0.92rem;
-  height: 2.2rem;
+  /* limitar a descricao*/
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
@@ -112,11 +134,17 @@
   background: transparent;
   cursor: pointer;
   font-weight: 700;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 .tf-btn--primary {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background: var(--accent);
   color: #fff;
   border: none;
+}
+.tf-btn--primary:hover,
+.tf-btn--primary:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(47, 60, 120, 0.26);
 }
 .tf-btn--ghost {
   background: transparent;
@@ -129,6 +157,6 @@
 @media (max-width: 520px) {
   .tf-card__poster,
   .tf-card__placeholder {
-    height: 220px;
+    aspect-ratio: 2 / 3;
   }
 }

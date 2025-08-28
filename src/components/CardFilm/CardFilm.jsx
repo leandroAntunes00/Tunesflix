@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './CardFilm.css';
 
 // Props:
@@ -26,11 +26,45 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const showPoster = Boolean(posterSrc) && !imgError;
+  const [isVisible, setIsVisible] = useState(false);
+  const elRef = useRef(null);
+
+  useEffect(() => {
+    const node = elRef.current;
+    if (!node) return;
+    // Em ambientes de teste (JSDOM) IntersectionObserver pode não existir.
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            io.unobserve(node);
+          }
+        });
+      },
+      { threshold: 0.16 }
+    );
+    io.observe(node);
+    return () => io.disconnect();
+  }, []);
 
   const rating = film.vote_average ? Number(film.vote_average).toFixed(1) : null;
 
   return (
-    <article className="tf-card tf-card--vertical" aria-labelledby={`title-${film.id}`}>
+    <article
+      ref={elRef}
+      className={`tf-card tf-card--vertical ${isVisible ? 'is-visible' : ''}`}
+      aria-labelledby={`title-${film.id}`}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') onDetails && onDetails(film);
+      }}
+    >
       <figure className="tf-card__figure">
         {showPoster ? (
           <img
@@ -57,11 +91,7 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
         <h3 id={`title-${film.id}`} className="tf-card__title">
           {title}
         </h3>
-        <p className="tf-card__meta">
-          {film.overview
-            ? `${film.overview.slice(0, 110)}${film.overview.length > 110 ? '…' : ''}`
-            : ''}
-        </p>
+  <p className="tf-card__meta">{film.overview || ''}</p>
 
         <div className="tf-card__actions">
           <button

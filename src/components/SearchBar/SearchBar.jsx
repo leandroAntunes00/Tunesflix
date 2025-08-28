@@ -99,7 +99,7 @@ export default function SearchBar({
         )}
       </div>
 
-      <button type="submit" className="tf-search__btn" aria-label="Pesquisar">
+      <button type="submit" className="tf-search__btn" aria-label="Buscar">
         Buscar
       </button>
     </form>

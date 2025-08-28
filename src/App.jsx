@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import useMovies from './hooks/useMovies';

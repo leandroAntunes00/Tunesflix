@@ -1,11 +1,13 @@
 .tf-modal__backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 60;
+  /* subtle blur & glass effect to make modal feel elevated */
+  background: rgba(2, 6, 23, 0.45);
+  backdrop-filter: blur(6px) saturate(120%);
 }
 .tf-modal {
   background: #0f1113;
@@ -14,8 +16,17 @@
   max-width: 880px;
   width: 94%;
   padding: 1rem;
+  max-height: 80vh; /* limita altura do modal para não vazar da viewport */
   position: relative;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  transform-origin: center center;
+  transform: translateY(8px) scale(0.992);
+  opacity: 0;
+}
+.tf-modal.is-open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
 }
 .tf-modal__close {
   position: absolute;
@@ -47,10 +58,13 @@
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+  overflow: auto; /* permite scroll interno se o conteúdo for grande */
+  padding-right: 6px; /* espaço para o scroll */
 }
 .tf-modal__poster img {
   width: 220px;
   border-radius: 8px;
+  object-fit: cover;
 }
 .tf-modal__info {
   flex: 1;
@@ -59,6 +73,13 @@
 .tf-modal__overview {
   color: #e1e1e1;
   margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* limita linhas visiveis */
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
 }
 .tf-modal__loading,
 .tf-modal__error {
@@ -69,4 +90,14 @@
 /* labels and strong text */
 .tf-modal__info strong {
   color: #fff;
+}
+
+@media (max-width: 720px) {
+  .tf-modal__body {
+    flex-direction: column;
+    align-items: center;
+  }
+  .tf-modal__poster img {
+    width: 160px;
+  }
 }

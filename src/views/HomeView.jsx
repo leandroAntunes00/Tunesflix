@@ -1,4 +1,5 @@
 import React from 'react';
+import './HomeView.css';
 import HomeHeader from '../components/HomeHeader/HomeHeader';
 import SearchBar from '../components/SearchBar/SearchBar';
 import CategorySelector from '../components/CategorySelector/CategorySelector';
@@ -23,12 +24,12 @@ export default function HomeView({
 }) {
   return (
     <div className="app-container">
-      <section className="tf-search-section" style={{ marginBottom: '1.25rem' }}>
+  <section className="tf-search-section">
         <CategorySelector value={category} onChange={(v) => onCategoryChange(v)} />
         <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
       </section>
 
-      {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
+  {error && <div className="tf-error">Erro: {error.message}</div>}
 
       <HomeHeader query={query} category={category} />
 
