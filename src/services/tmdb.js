@@ -58,4 +58,10 @@ export async function getMovieDetails(id) {
   return safeFetch(url);
 }
 
-export default { searchMovies, getMovieDetails, fetchPopularMovies, fetchTopRatedMovies, fetchNowPlayingMovies };
+export default {
+  searchMovies,
+  getMovieDetails,
+  fetchPopularMovies,
+  fetchTopRatedMovies,
+  fetchNowPlayingMovies,
+};

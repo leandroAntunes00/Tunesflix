@@ -18,6 +18,7 @@ Um aplicativo React para descobrir e gerenciar filmes favoritos, construído com
 O projeto utiliza uma arquitetura modular com hooks especializados:
 
 ### Hooks Principais
+
 - `useMovies` - Hook principal que gerencia todas as categorias e buscas
 - `usePopularMovies` - Gerencia filmes populares
 - `useTopRatedMovies` - Gerencia filmes mais avaliados
@@ -26,6 +27,7 @@ O projeto utiliza uma arquitetura modular com hooks especializados:
 - `useMovieDetails` - Gerencia detalhes de filmes específicos
 
 ### API Endpoints
+
 - `GET /api/movies/search?q={query}&page={page}` - Busca de filmes
 - `GET /api/movies/popular?page={page}` - Filmes populares
 - `GET /api/movies/top-rated?page={page}` - Filmes mais avaliados
@@ -40,10 +42,13 @@ O projeto utiliza uma arquitetura modular com hooks especializados:
    npm install
    ```
 3. Configure as variáveis de ambiente:
+
    ```bash
    cp .env.example .env
    ```
+
    Edite o `.env` com sua configuração da API:
+
    ```env
    VITE_API=http://localhost:3000
    ```

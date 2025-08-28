@@ -11,18 +11,18 @@ export default function HomeHeader({ query, category = 'popular' }) {
       case 'top-rated':
         return {
           title: 'Mais Avaliados',
-          subtitle: 'Filmes com as melhores avaliações'
+          subtitle: 'Filmes com as melhores avaliações',
         };
       case 'now-playing':
         return {
           title: 'Em Cartaz',
-          subtitle: 'Filmes em exibição nos cinemas'
+          subtitle: 'Filmes em exibição nos cinemas',
         };
       case 'popular':
       default:
         return {
           title: 'Populares',
-          subtitle: 'Filmes populares no momento'
+          subtitle: 'Filmes populares no momento',
         };
     }
   };

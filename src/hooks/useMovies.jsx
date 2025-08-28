@@ -32,28 +32,38 @@ export default function useMovies(initialCategory = 'popular') {
   const activeHook = searchQuery ? search : getActiveHook();
 
   // Função para mudar categoria
-  const changeCategory = useCallback((newCategory) => {
-    setCategory(newCategory);
-    setSearchQuery('');
-    // Resetar a busca quando mudar categoria
-    search.reset();
-    // Carregar a nova categoria
-    const hook = newCategory === 'top-rated' ? topRated :
-                 newCategory === 'now-playing' ? nowPlaying : popular;
-    hook.fetchMovies(1);
-  }, [search, topRated, nowPlaying, popular]);
+  const changeCategory = useCallback(
+    (newCategory) => {
+      setCategory(newCategory);
+      setSearchQuery('');
+      // Resetar a busca quando mudar categoria
+      search.reset();
+      // Carregar a nova categoria
+      const hook =
+        newCategory === 'top-rated'
+          ? topRated
+          : newCategory === 'now-playing'
+            ? nowPlaying
+            : popular;
+      hook.fetchMovies(1);
+    },
+    [search, topRated, nowPlaying, popular]
+  );
 
   // Função para buscar
-  const handleSearch = useCallback((query) => {
-    setSearchQuery(query);
-    if (query && query.trim()) {
-      search.search(query, 1);
-    } else {
-      setSearchQuery('');
-      // Voltar para a categoria atual
-      getActiveHook().fetchMovies(1);
-    }
-  }, [search, getActiveHook]);
+  const handleSearch = useCallback(
+    (query) => {
+      setSearchQuery(query);
+      if (query && query.trim()) {
+        search.search(query, 1);
+      } else {
+        setSearchQuery('');
+        // Voltar para a categoria atual
+        getActiveHook().fetchMovies(1);
+      }
+    },
+    [search, getActiveHook]
+  );
 
   // Função para resetar tudo
   const reset = useCallback(() => {
