@@ -1,6 +1,8 @@
 import React from 'react';
+import './HomeView.css';
 import HomeHeader from '../components/HomeHeader/HomeHeader';
 import SearchBar from '../components/SearchBar/SearchBar';
+import CategorySelector from '../components/CategorySelector/CategorySelector';
 import CardList from '../components/CardList/CardList';
 import Pagination from '../components/Pagination/Pagination';
 
@@ -19,26 +21,16 @@ export default function HomeView({
   onDetails,
   category,
   onCategoryChange,
+  onNavigate,
 }) {
   return (
-    <>
+    <div className="app-container">
       <section className="tf-search-section">
-        <div className="tf-category-selector">
-          <label htmlFor="category-select">Categoria:</label>
-          <select
-            id="category-select"
-            value={category}
-            onChange={(e) => onCategoryChange(e.target.value)}
-          >
-            <option value="popular">Populares</option>
-            <option value="top-rated">Mais Avaliados</option>
-            <option value="now-playing">Em Cartaz</option>
-          </select>
-        </div>
+        <CategorySelector value={category} onChange={(v) => onCategoryChange(v)} />
         <SearchBar defaultValue={query} onSearch={(q) => search(q)} />
       </section>
 
-      {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
+      {error && <div className="tf-error">Erro: {error.message}</div>}
 
       <HomeHeader query={query} category={category} />
 
@@ -46,6 +38,7 @@ export default function HomeView({
         items={results}
         onToggleFavorite={onToggleFavorite}
         onDetails={onDetails}
+        onNavigate={onNavigate}
         favorites={favorites}
         loading={loading}
       />
@@ -57,7 +50,7 @@ export default function HomeView({
         onNext={nextPage}
         label={query && query.trim() ? 'Busca' : getCategoryLabel(category)}
       />
-    </>
+    </div>
   );
 }
 

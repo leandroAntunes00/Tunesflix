@@ -1,0 +1,11 @@
+.tf-search-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.25rem; /* migrate inline style */
+}
+
+.tf-error {
+  color: salmon;
+  margin: 0.6rem 0;
+}

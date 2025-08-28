@@ -1,0 +1,59 @@
+.tf-detail__hero {
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end; /* place content near the bottom */
+  position: relative;
+  filter: none; /* ensure no blur/softening */
+}
+
+/* subtle gradient only at the bottom to improve text contrast */
+.tf-detail__hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.6) 100%);
+  pointer-events: none;
+}
+
+.tf-detail__hero-inner {
+  width: 100%;
+  padding: 2rem var(--gutter);
+  position: relative; /* stay above the pseudo overlay */
+  color: var(--text);
+  display: flex;
+  align-items: flex-end;
+}
+.tf-detail__body {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+.tf-detail__poster img {
+  width: 260px;
+  border-radius: 8px;
+}
+.tf-detail__info {
+  flex: 1;
+}
+.tf-cast {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.tf-cast li {
+  background: var(--glass);
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+}
+@media (max-width: 720px) {
+  .tf-detail__body {
+    flex-direction: column;
+    align-items: center;
+  }
+  .tf-detail__poster img {
+    width: 180px;
+  }
+}

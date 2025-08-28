@@ -3,9 +3,14 @@ import { test, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FavoritesView from './FavoritesView';
+import { MemoryRouter } from 'react-router-dom';
 
 test('FavoritesView mostra mensagem quando vazio', () => {
-  render(<FavoritesView favorites={{}} onToggleFavorite={() => {}} />);
+  render(
+    <MemoryRouter>
+      <FavoritesView favorites={{}} onToggleFavorite={() => {}} />
+    </MemoryRouter>
+  );
   expect(screen.getByText(/Nenhum favorito ainda/i)).toBeInTheDocument();
 });
 
@@ -19,7 +24,9 @@ test('FavoritesView renderiza favoritos e chama handlers', async () => {
   const onDetails = vi.fn();
 
   render(
-    <FavoritesView favorites={favs} onToggleFavorite={onToggleFavorite} onDetails={onDetails} />
+    <MemoryRouter>
+      <FavoritesView favorites={favs} onToggleFavorite={onToggleFavorite} onDetails={onDetails} />
+    </MemoryRouter>
   );
 
   expect(screen.getByText('Favorito 1')).toBeInTheDocument();
@@ -38,7 +45,11 @@ test('FavoritesView mostra favoritos sem buscar (caso adicional)', () => {
     6: { id: 6, title: 'Fav Movie 6', poster_path: null, release_date: '2020-01-01' },
   };
 
-  render(<FavoritesView favorites={favoritesMap} onToggleFavorite={() => {}} />);
+  render(
+    <MemoryRouter>
+      <FavoritesView favorites={favoritesMap} onToggleFavorite={() => {}} />
+    </MemoryRouter>
+  );
   expect(screen.getByText('Fav Movie 5')).toBeInTheDocument();
   expect(screen.getByText('Fav Movie 6')).toBeInTheDocument();
 });

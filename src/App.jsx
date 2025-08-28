@@ -1,128 +1,67 @@
-import { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import useMovies from './hooks/useMovies';
 import './App.css';
 import FavoritesView from './components/Favorites/FavoritesView';
-import MovieModal from './components/MovieModal/MovieModal';
-import { getMovieDetails } from './services/tmdb';
-import HomeView from './views/HomeView';
-
-// Removed internal favorites logic
+import HomePage from './pages/HomePage';
+import MovieDetailPage from './pages/MovieDetailPage';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useFavorites } from './hooks/useFavorites';
 
 function App() {
-  const {
-    category,
-    searchQuery,
-    isSearching,
-    results,
-    loading,
-    error,
-    page,
-    nextPage,
-    prevPage,
-    totalPages,
-    changeCategory,
-    search,
-    reset,
-  } = useMovies();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // favorites moved to FavoritesContext
-  const { favorites, toggleFavorite } = useFavorites();
-  const [view, setView] = useState('home');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false);
-  const [modalDetails, setModalDetails] = useState(null);
-  const [modalError, setModalError] = useState(null);
+  // obtain favorites-related actions from the hook
+  const { reset, changeCategory } = useFavorites();
 
-  // Inicialização: carrega a categoria padrão quando o app inicia
-  useEffect(() => {
-    if (results.length === 0 && !isSearching) {
-      // Carrega a categoria padrão (popular)
+  const handleNavigate = (v) => {
+    if (v === 'home') {
+      reset();
       changeCategory('popular');
+      navigate('/');
+    } else if (v === 'favorites') {
+      navigate('/favorites');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
-  const handleToggleFavorite = useCallback(
-    (film) => {
-      toggleFavorite(film);
-    },
-    [toggleFavorite]
-  );
-
-  const handleDetails = useCallback(async (film) => {
-    if (!film?.id) return;
-    setModalOpen(true);
-    setModalLoading(true);
-    setModalDetails(null);
-    setModalError(null);
-    try {
-      const data = await getMovieDetails(film.id);
-      setModalDetails(data);
-    } catch (err) {
-      setModalError(err);
-    } finally {
-      setModalLoading(false);
-    }
-  }, []);
+  // derive active tab from current location
+  const active = location.pathname.startsWith('/favorites') ? 'favorites' : 'home';
 
   return (
     <>
-      <Header
-        onNavigate={(v) => {
-          setView(v);
-          if (v === 'home') {
-            // limpar query e carregar lista padrão (populares)
-            reset();
-            changeCategory('popular');
-          }
-        }}
-        active={view}
-      />
+      <Header onNavigate={handleNavigate} active={active} />
 
       <main className="tf-main">
-        {view === 'home' && (
-          <HomeView
-            query={searchQuery}
-            search={search}
-            results={results}
-            loading={loading}
-            error={error}
-            page={page}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            totalPages={totalPages}
-            favorites={favorites}
-            onToggleFavorite={handleToggleFavorite}
-            onDetails={handleDetails}
-            category={category}
-            onCategoryChange={changeCategory}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                onNavigate={(type, film) => {
+                  if (type === 'detail') {
+                    navigate(`/movie/${film.id}`, { state: { film } });
+                  }
+                }}
+              />
+            }
           />
-        )}
 
-        {view === 'favorites' && (
-          <section>
-            <h2>Favoritos</h2>
-            <FavoritesView
-              favorites={favorites}
-              onToggleFavorite={handleToggleFavorite}
-              onDetails={handleDetails}
-            />
-          </section>
-        )}
+          <Route
+            path="/favorites"
+            element={
+              <section>
+                <h2>Favoritos</h2>
+                <FavoritesView />
+              </section>
+            }
+          />
+
+          <Route path="/movie/:id" element={<MovieDetailPage />} />
+        </Routes>
       </main>
 
       <Footer />
-
-      <MovieModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        loading={modalLoading}
-        details={modalDetails}
-        error={modalError}
-      />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import usePopularMovies from './usePopularMovies';
 import useTopRatedMovies from './useTopRatedMovies';
 import useNowPlayingMovies from './useNowPlayingMovies';
@@ -14,6 +14,23 @@ export default function useMovies(initialCategory = 'popular') {
   const topRated = useTopRatedMovies();
   const nowPlaying = useNowPlayingMovies();
   const search = useMovieSearch();
+
+  // Carrega a categoria ativa na montagem inicial (evita lista vazia ao abrir a Home)
+  useEffect(() => {
+    try {
+      const hook = getActiveHook();
+      if (hook && typeof hook.fetchMovies === 'function') {
+        // só buscar se ainda não houver resultados
+        if (!hook.results || hook.results.length === 0) {
+          hook.fetchMovies(1);
+        }
+      }
+    } catch {
+      // não bloquear em caso de erro incidental
+    }
+    // intencionalmente vazio: queremos executar apenas na montagem inicial
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Função para obter o hook ativo baseado na categoria
   const getActiveHook = useCallback(() => {

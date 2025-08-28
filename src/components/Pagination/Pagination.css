@@ -1,21 +1,22 @@
 /* Styles for Pagination component */
 .tf-pagination {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 1.25rem; /* mais espaço acima */
 }
 
 /* Pagination buttons */
 .tf-pagination button {
-  background: #111827;
+  background: linear-gradient(90deg, rgba(82, 91, 242, 0.14), rgba(57, 79, 122, 0.12));
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(25, 30, 45, 0.06);
 }
 
 .tf-pagination button[disabled] {
@@ -24,8 +25,9 @@
 }
 
 .tf-pagination span {
-  color: #333;
-  font-size: 0.95rem;
+  color: var(--muted);
+  font-size: 0.98rem;
+  font-weight: 600;
 }
 
 @media (max-width: 520px) {

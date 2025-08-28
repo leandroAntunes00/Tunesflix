@@ -3,6 +3,7 @@ import { test, vi, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CardFilm from './CardFilm';
+import { MemoryRouter } from 'react-router-dom';
 
 const film = { id: 1, title: 'Teste', release_date: '2020-01-01', poster_path: null };
 
@@ -11,7 +12,11 @@ test('renderiza título, ano e botões e chama handlers', async () => {
   const onDetails = vi.fn();
   const onToggleFavorite = vi.fn();
 
-  render(<CardFilm film={film} onDetails={onDetails} onToggleFavorite={onToggleFavorite} />);
+  render(
+    <MemoryRouter>
+      <CardFilm film={film} onDetails={onDetails} onToggleFavorite={onToggleFavorite} />
+    </MemoryRouter>
+  );
 
   expect(screen.getByText('Teste')).toBeInTheDocument();
   expect(screen.getByText('2020')).toBeInTheDocument();

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './MovieModal.css';
+import { posterImage } from '../../services/tmdb';
 
 export default function MovieModal({ open, onClose, loading, details, error }) {
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
   return (
     <div className="tf-modal__backdrop" onClick={onClose} role="presentation">
       <div
-        className="tf-modal"
+        className={`tf-modal ${open ? 'is-open' : ''}`}
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
@@ -47,7 +48,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
             <div className="tf-modal__body">
               <div className="tf-modal__poster">
                 {details.poster_path ? (
-                  <img src={`https://image.tmdb.org/t/p/w342${details.poster_path}`} alt="poster" />
+                  <img src={posterImage(details.poster_path)} alt="poster" />
                 ) : (
                   <div className="tf-card__placeholder">Sem imagem</div>
                 )}
