@@ -40,7 +40,7 @@ export default function HomeView({
 
       {error && <div style={{ color: 'salmon' }}>Erro: {error.message}</div>}
 
-      <HomeHeader query={query} />
+      <HomeHeader query={query} category={category} />
 
       <CardList
         items={results}
