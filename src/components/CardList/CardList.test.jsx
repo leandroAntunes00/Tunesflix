@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import CardList from './CardList';
 import { MemoryRouter } from 'react-router-dom';
 
-const films = [
+const mockFilms = [
   { id: 1, title: 'Filme A', release_date: '2020-05-01' },
   { id: 2, title: 'Filme B', release_date: '2019-07-12' },
 ];
@@ -18,7 +18,7 @@ test('CardList renderiza itens e repassa handlers', async () => {
   render(
     <MemoryRouter>
       <CardList
-        items={films}
+        items={mockFilms}
         onDetails={onDetails}
         onToggleFavorite={onToggleFavorite}
         favorites={new Set([2])}
@@ -36,5 +36,11 @@ test('CardList renderiza itens e repassa handlers', async () => {
 
   // clicar em favoritar do segundo item (já favorito)
   await user.click(screen.getAllByRole('button', { name: /favoritar|favorito/i })[1]);
-  expect(onToggleFavorite).toHaveBeenCalled();
+  expect(onToggleFavorite).toHaveBeenCalledWith(mockFilms[1]);
+});
+
+test('CardList mostra estado vazio quando não há itens', () => {
+  render(<CardList items={[]} />);
+
+  expect(screen.getByText('Nenhum resultado encontrado')).toBeInTheDocument();
 });
