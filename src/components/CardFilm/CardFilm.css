@@ -115,26 +115,6 @@
   overflow: hidden;
 }
 
-/* Links inside the card should inherit text styles and remove default underline */
-.tf-card__link,
-.tf-card__link-title {
-  color: inherit;
-  text-decoration: none;
-  font-weight: inherit;
-}
-
-.tf-card__link-meta {
-  color: inherit;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.tf-card__link:focus-visible,
-.tf-card__link-title:focus-visible {
-  outline: 3px solid rgba(124, 92, 255, 0.18);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
 .tf-card__meta {
   margin: 0;
   color: var(--muted);

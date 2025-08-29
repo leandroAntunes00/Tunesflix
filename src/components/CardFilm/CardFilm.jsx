@@ -2,61 +2,90 @@ import React, { useState, useRef, useEffect } from 'react';
 import { tmdbImage } from '../../services/tmdb';
 import './CardFilm.css';
 
-// Props:
-// - film: object with { id, title, name, release_date, first_air_date, poster_path }
-// - onDetails(film)
-// - onToggleFavorite(film)
-// - isFavorite: boolean
-// Props:
-// - film: object with { id, title, name, release_date, first_air_date, poster_path }
-// - onDetails(film)
-// - onToggleFavorite(film)
-// - isFavorite: boolean
-// - onNavigate(type, film)
+/**
+ * Componente CardFilm - Exibe informações de um filme/série em formato de cartão
+ *
+ * @param {Object} film - Objeto com dados do filme/série
+ * @param {Function} onDetails - Callback para abrir detalhes
+ * @param {Function} onToggleFavorite - Callback para alternar favorito
+ * @param {boolean} isFavorite - Se o item está nos favoritos
+ * @param {Function} onNavigate - Callback para navegação (opcional)
+ */
 export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFavorite = false, onNavigate }) {
+  // Extração e processamento dos dados do filme
   const title = film.title || film.name || 'Sem título';
-  const date = film.release_date || film.first_air_date || '';
-  let year = '';
-  if (date) {
-    const m = String(date).match(/^(\d{4})/);
-    year = m ? m[1] : String(new Date(date).getFullYear());
-  }
+  const releaseDate = film.release_date || film.first_air_date || '';
+  const year = releaseDate ? new Date(releaseDate).getFullYear().toString() : '';
 
-  // suporte a caminho do TMDB ou URL completo
+  // Processamento do poster
   const posterPath = film.poster_path || film.poster || film.posterPath || '';
   const posterSrc = posterPath ? tmdbImage(posterPath, 'w342') : null;
 
+  // Estados para controle da imagem
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const showPoster = Boolean(posterSrc) && !imgError;
+
+  // Estado e ref para lazy loading
   const [isVisible, setIsVisible] = useState(false);
   const elRef = useRef(null);
 
+  // Lazy loading com IntersectionObserver
   useEffect(() => {
     const node = elRef.current;
     if (!node) return;
-    // Em ambientes de teste (JSDOM) IntersectionObserver pode não existir.
+
+    // Suporte para ambientes de teste onde IntersectionObserver pode não existir
     if (typeof IntersectionObserver === 'undefined') {
       setIsVisible(true);
-      return undefined;
+      return;
     }
 
-    const io = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true);
-            io.unobserve(node);
+            observer.unobserve(node);
           }
         });
       },
       { threshold: 0.16 }
     );
-    io.observe(node);
-    return () => io.disconnect();
+
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
 
+  // Processamento da avaliação
   const rating = film.vote_average ? Number(film.vote_average).toFixed(1) : null;
+
+  // Handlers para interações
+  const handleCardClick = () => {
+    if (onNavigate) {
+      onNavigate('detail', film);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (onNavigate) {
+        onNavigate('detail', film);
+      } else if (onDetails) {
+        onDetails(film);
+      }
+    }
+  };
+
+  const handleDetailsClick = (e) => {
+    e.stopPropagation();
+    onDetails && onDetails(film);
+  };
+
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    onToggleFavorite && onToggleFavorite(film);
+  };
 
   return (
     <article
@@ -64,15 +93,8 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
       className={`tf-card tf-card--vertical ${isVisible ? 'is-visible' : ''}`}
       aria-labelledby={`title-${film.id}`}
       tabIndex={0}
-      onClick={() => {
-        if (onNavigate) onNavigate('detail', film);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          if (onNavigate) onNavigate('detail', film);
-          else onDetails && onDetails(film);
-        }
-      }}
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
     >
       <figure className="tf-card__figure">
         {showPoster ? (
@@ -105,10 +127,7 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
         <div className="tf-card__actions">
           <button
             className="tf-btn tf-btn--primary"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDetails && onDetails(film);
-            }}
+            onClick={handleDetailsClick}
             aria-label={`Ver detalhes de ${title}`}
           >
             Detalhes
@@ -116,10 +135,7 @@ export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFav
 
           <button
             className={`tf-btn tf-btn--ghost ${isFavorite ? 'is-fav' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite && onToggleFavorite(film);
-            }}
+            onClick={handleFavoriteClick}
             aria-pressed={isFavorite}
             aria-label={
               isFavorite ? `Remover ${title} dos favoritos` : `Adicionar ${title} aos favoritos`

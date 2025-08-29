@@ -3,6 +3,7 @@
   margin-top: 2.4rem;
   padding: 1.2rem 0 2rem 0;
 }
+
 .tf-footer__inner {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -13,14 +14,11 @@
   align-items: center;
   text-align: center;
 }
+
 .tf-footer__copyright {
   color: var(--muted);
   font-weight: 600;
-}
-.tf-footer__nav a {
-  color: inherit;
-  margin-left: 0.75rem;
-  text-decoration: none;
+  margin: 0; /* Remove margem padrão do parágrafo */
 }
 
 @media (min-width: 880px) {
