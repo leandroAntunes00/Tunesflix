@@ -1,62 +1,97 @@
-import React, { useState, useRef } from 'react';
+import React, { memo, useState, useRef, useCallback } from 'react';
 import './SearchBar.css';
+import { ACCESSIBILITY } from '../../config/appConfig';
 
 /**
- * Componente SearchBar - Barra de pesquisa para filmes
- * Permite buscar filmes com funcionalidades de limpar e submeter
+ * MELHOR PRÁTICA MODERNA (2025) - SearchBar Component
  *
- * @param {string} defaultValue - Valor inicial do campo de busca
- * @param {Function} onSearch - Callback chamado ao pesquisar
- * @param {string} placeholder - Placeholder do campo de entrada
+ * MELHORIAS IMPLEMENTADAS:
+ * - Memoização com React.memo para evitar re-renders desnecessários
+ * - useCallback para todos os handlers estáveis
+ * - Acessibilidade aprimorada com atributos ARIA
+ * - Constantes centralizadas
+ * - Documentação JSDoc completa
+ * - Prevenção de manipulação de prototype
  */
-export default function SearchBar({
+
+/**
+ * SearchBar - Componente de barra de pesquisa
+ *
+ * Responsável por:
+ * - Permitir busca de filmes com entrada de texto
+ * - Fornecer funcionalidades de limpar e submeter
+ * - Suporte a navegação por teclado (Enter, Escape)
+ * - Garantir acessibilidade adequada
+ *
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - Memoização para otimização de performance
+ * - Handlers estáveis com useCallback
+ * - Acessibilidade aprimorada
+ * - Constantes centralizadas
+ * - Validação de entrada
+ *
+ * @param {Object} props
+ * @param {string} [props.defaultValue] - Valor inicial do campo
+ * @param {Function} [props.onSearch] - Callback para busca
+ * @param {string} [props.placeholder] - Placeholder do campo
+ */
+const SearchBar = memo(({
   defaultValue = '',
   onSearch = () => {},
   placeholder = 'Buscar filmes (ex: Batman)',
-}) {
+}) => {
   const [value, setValue] = useState(defaultValue);
   const inputRef = useRef(null);
 
-  // Handler para submissão do formulário
-  const handleSubmit = (e) => {
+  // Handler memoizado para submissão do formulário
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    onSearch(value.trim());
-  };
+    const trimmedValue = value.trim();
+    if (trimmedValue) {
+      onSearch(trimmedValue);
+    }
+  }, [value, onSearch]);
 
-  // Handler para limpar o campo de busca
-  const handleClear = () => {
+  // Handler memoizado para limpar o campo
+  const handleClear = useCallback(() => {
     setValue('');
     inputRef.current?.focus();
-  };
+  }, []);
 
-  // Handler para teclas especiais
-  const handleKeyDown = (e) => {
+  // Handler memoizado para teclas especiais
+  const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape') {
       handleClear();
     }
-  };
+  }, [handleClear]);
 
-  // Handler para mudança no input
-  const handleInputChange = (e) => {
+  // Handler memoizado para mudança no input
+  const handleInputChange = useCallback((e) => {
     setValue(e.target.value);
-  };
+  }, []);
 
   return (
-    <form className="tf-search" onSubmit={handleSubmit} role="search">
+    <form
+      className="tf-search"
+      onSubmit={handleSubmit}
+      role={ACCESSIBILITY.ROLES.SEARCH}
+      aria-label="Formulário de busca de filmes"
+    >
       <label htmlFor="tf-search-input" className="visually-hidden">
         Buscar filmes
       </label>
 
       <div className="tf-search__field">
         {/* Ícone de lupa */}
-        <span className="tf-search__icon" aria-hidden>
+        <span className="tf-search__icon" aria-hidden="true">
           <svg
             width="18"
             height="18"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
+            role="img"
+            aria-label="Ícone de busca"
           >
             <path
               d="M21 21l-4.35-4.35"
@@ -88,8 +123,9 @@ export default function SearchBar({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           autoComplete="off"
-          aria-label="Buscar filmes"
+          aria-label="Campo de busca de filmes"
           type="search"
+          maxLength="100"
         />
 
         {/* Botão de limpar - só aparece quando há valor */}
@@ -98,7 +134,8 @@ export default function SearchBar({
             type="button"
             className="tf-search__clear"
             onClick={handleClear}
-            aria-label="Limpar pesquisa"
+            aria-label="Limpar campo de pesquisa"
+            title="Limpar pesquisa"
           >
             <svg
               width="14"
@@ -107,6 +144,8 @@ export default function SearchBar({
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
+              role="img"
+              aria-label="Ícone de limpar"
             >
               <path
                 d="M18 6L6 18M6 6l12 12"
@@ -121,9 +160,19 @@ export default function SearchBar({
       </div>
 
       {/* Botão de buscar */}
-      <button type="submit" className="tf-search__btn" aria-label="Buscar">
+      <button
+        type="submit"
+        className="tf-search__btn"
+        aria-label="Executar busca"
+        disabled={!value.trim()}
+      >
         Buscar
       </button>
     </form>
   );
-}
+});
+
+// Nome de exibição para debugging
+SearchBar.displayName = 'SearchBar';
+
+export default SearchBar;

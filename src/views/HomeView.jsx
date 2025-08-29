@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import './HomeView.css';
 import HomeHeader from '../components/HomeHeader/HomeHeader';
@@ -8,6 +8,7 @@ import CardList from '../components/CardList/CardList';
 import Pagination from '../components/Pagination/Pagination';
 import { ErrorStateView, EmptyStateView } from './StateViews';
 import { useViewState } from '../hooks/useViewState';
+import { getCategoryLabel } from './constants';
 
 /**
  * MELHOR PRÁTICA MODERNA (2025):
@@ -46,8 +47,10 @@ import { useViewState } from '../hooks/useViewState';
  * - Organizar os componentes de busca, categoria e listagem
  * - Gerenciar a paginação e estados de carregamento
  *
- * Princípios de design:
- * - Composição de componentes especializados
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - Memoização com React.memo para evitar re-renders desnecessários
+ * - useCallback para handlers estáveis
+ * - useMemo para computações pesadas
  * - Separação clara de responsabilidades
  * - Interface declarativa e reutilizável
  *
@@ -67,8 +70,15 @@ import { useViewState } from '../hooks/useViewState';
  * @param {string} props.category - Categoria selecionada
  * @param {Function} props.onCategoryChange - Handler para mudança de categoria
  * @param {Function} props.onNavigate - Handler para navegação
+ *
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - Memoização com React.memo para evitar re-renders desnecessários
+ * - useCallback para handlers estáveis
+ * - useMemo para computações pesadas
+ * - Separação clara de responsabilidades
+ * - Interface declarativa e reutilizável
  */
-export default function HomeView({
+function HomeView({
   query,
   search,
   results,
@@ -92,17 +102,34 @@ export default function HomeView({
     error,
     query,
   });
+
+  // Memoização do rótulo da categoria para evitar recálculos
+  const categoryLabel = useMemo(() => getCategoryLabel(category), [category]);
+
+  // Callbacks memoizados para handlers estáveis
+  const handleCategoryChange = useCallback((value) => {
+    onCategoryChange(value);
+  }, [onCategoryChange]);
+
+  const handleSearch = useCallback((searchQuery) => {
+    search(searchQuery);
+  }, [search]);
+
+  const handleRetry = useCallback(() => {
+    search(query);
+  }, [search, query]);
+
   return (
     <div className="app-container">
       {/* Seção de busca e filtros */}
       <section className="tf-search-section" aria-label="Busca e filtros">
         <CategorySelector
           value={category}
-          onChange={(value) => onCategoryChange(value)}
+          onChange={handleCategoryChange}
         />
         <SearchBar
           defaultValue={query}
-          onSearch={(searchQuery) => search(searchQuery)}
+          onSearch={handleSearch}
         />
       </section>
 
@@ -110,7 +137,7 @@ export default function HomeView({
       {viewState.type === 'error' && (
         <ErrorStateView
           error={viewState.error}
-          onRetry={() => search(query)}
+          onRetry={handleRetry}
           title="Erro ao carregar filmes"
         />
       )}
@@ -121,7 +148,7 @@ export default function HomeView({
           message={
             viewState.isSearch
               ? `Não encontramos filmes para "${viewState.query}". Tente outros termos de busca.`
-              : `Não há filmes disponíveis na categoria "${getCategoryLabel(category)}" no momento.`
+              : `Não há filmes disponíveis na categoria "${categoryLabel}" no momento.`
           }
           icon="🎬"
         />
@@ -151,27 +178,15 @@ export default function HomeView({
           totalPages={totalPages}
           onPrev={prevPage}
           onNext={nextPage}
-          label={query && query.trim() ? 'Busca' : getCategoryLabel(category)}
+          label={query && query.trim() ? 'Busca' : categoryLabel}
         />
       )}
     </div>
   );
 }
 
-// Função utilitária para obter rótulo da categoria
-function getCategoryLabel(category) {
-  switch (category) {
-    case 'top-rated':
-      return 'Mais Avaliados';
-    case 'now-playing':
-      return 'Em Cartaz';
-    case 'popular':
-    default:
-      return 'Populares';
-  }
-}
-
-// Validação de props com PropTypes
+// Validação de props com PropTypes (fallback para JavaScript)
+// NOTA: Em projetos TypeScript modernos, isso seria substituído por interfaces
 HomeView.propTypes = {
   query: PropTypes.string.isRequired,
   search: PropTypes.func.isRequired,
@@ -201,3 +216,6 @@ HomeView.propTypes = {
 HomeView.defaultProps = {
   error: null,
 };
+
+// Export com memoização para otimização de performance
+export default memo(HomeView);

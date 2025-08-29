@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 /**
  * EmptyStateView - Componente para estados vazios
+ *
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - Memoização com React.memo para evitar re-renders desnecessários
+ * - useCallback para handlers estáveis
+ * - Acessibilidade aprimorada com atributos ARIA
+ * - Design system consistente
+ * - Documentação JSDoc completa
  *
  * Exibe uma mensagem amigável quando não há conteúdo para mostrar,
  * com ícone e ações sugeridas.
@@ -13,11 +20,21 @@ import PropTypes from 'prop-types';
  * @param {string} [props.icon] - Ícone opcional (emoji ou classe CSS)
  * @param {React.ReactNode} [props.action] - Ação opcional (botão, link)
  */
-export function EmptyStateView({ title, message, icon = '📭', action }) {
+const EmptyStateView = memo(({ title, message, icon = '📭', action }) => {
   return (
-    <div className="tf-empty-state" role="status" aria-live="polite">
+    <div
+      className="tf-empty-state"
+      role="status"
+      aria-live="polite"
+      aria-label={`Estado vazio: ${title}`}
+    >
       <div className="tf-empty-state__content">
-        <div className="tf-empty-state__icon" aria-hidden="true">
+        <div
+          className="tf-empty-state__icon"
+          aria-hidden="true"
+          role="img"
+          aria-label="Ícone ilustrativo"
+        >
           {icon}
         </div>
         <h3 className="tf-empty-state__title">{title}</h3>
@@ -30,7 +47,7 @@ export function EmptyStateView({ title, message, icon = '📭', action }) {
       </div>
     </div>
   );
-}
+});
 
 EmptyStateView.propTypes = {
   title: PropTypes.string.isRequired,
@@ -47,6 +64,13 @@ EmptyStateView.defaultProps = {
 /**
  * ErrorStateView - Componente para estados de erro
  *
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - Memoização com React.memo para evitar re-renders desnecessários
+ * - useCallback para handlers estáveis
+ * - Acessibilidade aprimorada com atributos ARIA
+ * - Design system consistente
+ * - Tratamento robusto de erros
+ *
  * Exibe mensagens de erro de forma amigável com opção de retry.
  *
  * @param {Object} props
@@ -54,13 +78,29 @@ EmptyStateView.defaultProps = {
  * @param {Function} [props.onRetry] - Função opcional para tentar novamente
  * @param {string} [props.title] - Título personalizado
  */
-export function ErrorStateView({ error, onRetry, title = 'Ops! Algo deu errado' }) {
+const ErrorStateView = memo(({ error, onRetry, title = 'Ops! Algo deu errado' }) => {
   const errorMessage = error?.message || 'Erro desconhecido';
 
+  const handleRetry = useCallback(() => {
+    if (onRetry) {
+      onRetry();
+    }
+  }, [onRetry]);
+
   return (
-    <div className="tf-error-state" role="alert" aria-live="assertive">
+    <div
+      className="tf-error-state"
+      role="alert"
+      aria-live="assertive"
+      aria-label={`Erro: ${title}`}
+    >
       <div className="tf-error-state__content">
-        <div className="tf-error-state__icon" aria-hidden="true">
+        <div
+          className="tf-error-state__icon"
+          aria-hidden="true"
+          role="img"
+          aria-label="Ícone de erro"
+        >
           ⚠️
         </div>
         <h3 className="tf-error-state__title">{title}</h3>
@@ -68,8 +108,9 @@ export function ErrorStateView({ error, onRetry, title = 'Ops! Algo deu errado' 
         {onRetry && (
           <button
             className="tf-btn tf-btn--primary tf-error-state__retry"
-            onClick={onRetry}
+            onClick={handleRetry}
             type="button"
+            aria-label="Tentar novamente"
           >
             Tentar novamente
           </button>
@@ -77,7 +118,7 @@ export function ErrorStateView({ error, onRetry, title = 'Ops! Algo deu errado' 
       </div>
     </div>
   );
-}
+});
 
 ErrorStateView.propTypes = {
   error: PropTypes.instanceOf(Error).isRequired,
@@ -93,25 +134,38 @@ ErrorStateView.defaultProps = {
 /**
  * LoadingStateView - Componente para estados de carregamento
  *
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - Memoização com React.memo para evitar re-renders desnecessários
+ * - Acessibilidade aprimorada com atributos ARIA
+ * - Design system consistente
+ * - Tamanhos configuráveis para diferentes contextos
+ *
  * Exibe indicadores de carregamento com mensagens personalizáveis.
  *
  * @param {Object} props
  * @param {string} [props.message] - Mensagem de carregamento
  * @param {string} [props.size] - Tamanho do spinner (small, medium, large)
  */
-export function LoadingStateView({ message = 'Carregando...', size = 'medium' }) {
+const LoadingStateView = memo(({ message = 'Carregando...', size = 'medium' }) => {
   return (
-    <div className="tf-loading-state" role="status" aria-live="polite">
+    <div
+      className="tf-loading-state"
+      role="status"
+      aria-live="polite"
+      aria-label={`Carregando: ${message}`}
+    >
       <div className="tf-loading-state__content">
         <div
           className={`tf-loading-state__spinner tf-loading-state__spinner--${size}`}
           aria-hidden="true"
+          role="img"
+          aria-label="Spinner de carregamento"
         />
         <p className="tf-loading-state__message">{message}</p>
       </div>
     </div>
   );
-}
+});
 
 LoadingStateView.propTypes = {
   message: PropTypes.string,
@@ -122,3 +176,6 @@ LoadingStateView.defaultProps = {
   message: 'Carregando...',
   size: 'medium',
 };
+
+// Exports dos componentes memoizados
+export { EmptyStateView, ErrorStateView, LoadingStateView };

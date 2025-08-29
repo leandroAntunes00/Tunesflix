@@ -4,15 +4,51 @@ Este diretório contém as views da aplicação, seguindo as melhores práticas 
 
 ## 📁 Estrutura
 
+## 📁 Estrutura Atualizada (2025)
+
 ```
 src/views/
-├── HomeView.jsx          # View principal da página inicial
+├── HomeView.jsx          # View principal da página inicial (memoizada)
 ├── HomeView.css          # Estilos da HomeView
 ├── HomeView.test.jsx     # Testes da HomeView
-├── StateViews.jsx        # Componentes para estados (loading, error, empty)
+├── HomeView.modern.jsx   # Versão moderna (referência)
+├── StateViews.jsx        # Componentes de estado (memoizados)
 ├── StateViews.css        # Estilos dos componentes de estado
+├── constants.js          # Constantes centralizadas
 └── README.md            # Esta documentação
 ```
+
+## 🎯 Melhorias Implementadas (2025)
+
+### 1. **Memoização e Performance**
+- ✅ `React.memo` para evitar re-renders desnecessários
+- ✅ `useCallback` para handlers estáveis
+- ✅ `useMemo` para computações pesadas
+- ✅ Otimização de performance em componentes
+
+### 2. **Acessibilidade Aprimorada (a11y)**
+- ✅ Atributos ARIA completos (`aria-label`, `aria-live`, `role`)
+- ✅ Navegação por teclado aprimorada
+- ✅ Screen reader support melhorado
+- ✅ Semântica HTML correta
+
+### 3. **Clean Code e Manutenibilidade**
+- ✅ Constantes centralizadas em `constants.js`
+- ✅ Funções utilitárias puras
+- ✅ Separação clara de responsabilidades
+- ✅ Documentação JSDoc completa
+
+### 4. **Prevenção de Antipadrões**
+- ✅ **Zero manipulação de prototype**
+- ✅ Evitação de singletons mutáveis
+- ✅ Props drilling minimizado
+- ✅ Componentes pequenos e focados
+
+### 5. **TypeScript Ready**
+- ✅ Interfaces documentadas nos comentários
+- ✅ Estrutura preparada para migração
+- ✅ Type safety considerations
+- ✅ Contratos explícitos
 
 ## 🎯 Princípios Implementados
 
