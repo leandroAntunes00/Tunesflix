@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './HomeView.css';
 import HomeHeader from '../components/HomeHeader/HomeHeader';
@@ -6,14 +6,9 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import CategorySelector from '../components/CategorySelector/CategorySelector';
 import CardList from '../components/CardList/CardList';
 import Pagination from '../components/Pagination/Pagination';
-import { ErrorStateView, EmptyStateView } from './StateViews';
-import { useViewState } from '../hooks/useViewState';
-import { getCategoryLabel } from './constants';
 
 /**
- * MELHOR PRÁTICA MODERNA (2025):
- *
- * Para projetos modernos, considere migrar para TypeScript:
+ * MELHOR PRÁTICA MODERNA - TypeScript Interface (para referência)
  *
  * interface HomeViewProps {
  *   query: string;
@@ -35,24 +30,21 @@ import { getCategoryLabel } from './constants';
  *
  * VANTAGENS DO TYPESCRIPT:
  * ✅ Validação em tempo de compilação (não runtime)
- * ✅ IntelliSense e autocomplete superiores
- * ✅ Refatoração segura e automática
+ * ✅ IntelliSense e autocomplete melhores
+ * ✅ Refatoração segura
  * ✅ Menos bugs em produção
- * ✅ Zero overhead de performance
- *
+ * ✅ Documentação inline com tipos
+ */
+
+/**
  * HomeView - View principal da aplicação
  *
- * Responsável por:
- * - Renderizar a interface principal da página inicial
- * - Organizar os componentes de busca, categoria e listagem
- * - Gerenciar a paginação e estados de carregamento
- *
  * MELHORIAS IMPLEMENTADAS (2025):
- * - Memoização com React.memo para evitar re-renders desnecessários
- * - useCallback para handlers estáveis
- * - useMemo para computações pesadas
+ * - PropTypes para validação runtime (fallback para JS)
+ * - Acessibilidade aprimorada (ARIA labels)
  * - Separação clara de responsabilidades
- * - Interface declarativa e reutilizável
+ * - Componentes menores e mais focados
+ * - Documentação JSDoc completa
  *
  * @param {Object} props
  * @param {string} props.query - Query de busca atual
@@ -70,15 +62,8 @@ import { getCategoryLabel } from './constants';
  * @param {string} props.category - Categoria selecionada
  * @param {Function} props.onCategoryChange - Handler para mudança de categoria
  * @param {Function} props.onNavigate - Handler para navegação
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - Memoização com React.memo para evitar re-renders desnecessários
- * - useCallback para handlers estáveis
- * - useMemo para computações pesadas
- * - Separação clara de responsabilidades
- * - Interface declarativa e reutilizável
  */
-function HomeView({
+export default function HomeView({
   query,
   search,
   results,
@@ -95,97 +80,70 @@ function HomeView({
   onCategoryChange,
   onNavigate,
 }) {
-  // Hook para gerenciar estados da view
-  const viewState = useViewState({
-    items: results,
-    loading,
-    error,
-    query,
-  });
-
-  // Memoização do rótulo da categoria para evitar recálculos
-  const categoryLabel = useMemo(() => getCategoryLabel(category), [category]);
-
-  // Callbacks memoizados para handlers estáveis
-  const handleCategoryChange = useCallback((value) => {
-    onCategoryChange(value);
-  }, [onCategoryChange]);
-
-  const handleSearch = useCallback((searchQuery) => {
-    search(searchQuery);
-  }, [search]);
-
-  const handleRetry = useCallback(() => {
-    search(query);
-  }, [search, query]);
-
   return (
     <div className="app-container">
-      {/* Seção de busca e filtros */}
+      {/* Seção de busca e filtros - MELHORIA: aria-label para acessibilidade */}
       <section className="tf-search-section" aria-label="Busca e filtros">
         <CategorySelector
           value={category}
-          onChange={handleCategoryChange}
+          onChange={(value) => onCategoryChange(value)}
         />
         <SearchBar
           defaultValue={query}
-          onSearch={handleSearch}
+          onSearch={(searchQuery) => search(searchQuery)}
         />
       </section>
 
-      {/* Estados da aplicação baseados no viewState */}
-      {viewState.type === 'error' && (
-        <ErrorStateView
-          error={viewState.error}
-          onRetry={handleRetry}
-          title="Erro ao carregar filmes"
-        />
+      {/* Exibição de erros - MELHORIA: role="alert" para acessibilidade */}
+      {error && (
+        <div
+          className="tf-error"
+          role="alert"
+          aria-live="polite"
+        >
+          Erro: {error.message}
+        </div>
       )}
 
-      {viewState.type === 'empty' && (
-        <EmptyStateView
-          title="Nenhum filme encontrado"
-          message={
-            viewState.isSearch
-              ? `Não encontramos filmes para "${viewState.query}". Tente outros termos de busca.`
-              : `Não há filmes disponíveis na categoria "${categoryLabel}" no momento.`
-          }
-          icon="🎬"
-        />
-      )}
+      {/* Cabeçalho da seção */}
+      <HomeHeader query={query} category={category} />
 
-      {/* Cabeçalho da seção - só mostra quando apropriado */}
-      {viewState.shouldShowHeader && (
-        <HomeHeader query={query} category={category} />
-      )}
+      {/* Lista de filmes */}
+      <CardList
+        items={results}
+        onToggleFavorite={onToggleFavorite}
+        onDetails={onDetails}
+        onNavigate={onNavigate}
+        favorites={favorites}
+        loading={loading}
+      />
 
-      {/* Lista de filmes - só mostra quando há itens */}
-      {viewState.hasItems && (
-        <CardList
-          items={results}
-          onToggleFavorite={onToggleFavorite}
-          onDetails={onDetails}
-          onNavigate={onNavigate}
-          favorites={favorites}
-          loading={loading}
-        />
-      )}
-
-      {/* Paginação - só mostra quando há itens e múltiplas páginas */}
-      {viewState.shouldShowPagination && totalPages > 1 && (
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPrev={prevPage}
-          onNext={nextPage}
-          label={query && query.trim() ? 'Busca' : categoryLabel}
-        />
-      )}
+      {/* Paginação */}
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPrev={prevPage}
+        onNext={nextPage}
+        label={query && query.trim() ? 'Busca' : getCategoryLabel(category)}
+      />
     </div>
   );
 }
 
-// Validação de props com PropTypes (fallback para JavaScript)
+// Função utilitária para obter rótulo da categoria
+function getCategoryLabel(category) {
+  switch (category) {
+    case 'top-rated':
+      return 'Mais Avaliados';
+    case 'now-playing':
+      return 'Em Cartaz';
+    case 'popular':
+    default:
+      return 'Populares';
+  }
+}
+
+// Validação de props com PropTypes
 // NOTA: Em projetos TypeScript modernos, isso seria substituído por interfaces
 HomeView.propTypes = {
   query: PropTypes.string.isRequired,
@@ -216,6 +174,3 @@ HomeView.propTypes = {
 HomeView.defaultProps = {
   error: null,
 };
-
-// Export com memoização para otimização de performance
-export default memo(HomeView);

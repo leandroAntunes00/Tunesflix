@@ -1,0 +1,58 @@
+/* Loading Component Styles */
+.tf-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+}
+
+.tf-loading--small {
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+.tf-loading--medium {
+  padding: 2rem;
+  font-size: 1rem;
+}
+
+.tf-loading--large {
+  padding: 3rem;
+  font-size: 1.125rem;
+}
+
+.tf-loading__spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: tf-loading-spin 1s linear infinite;
+}
+
+.tf-loading--small .tf-loading__spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.tf-loading--large .tf-loading__spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 4px;
+}
+
+.tf-loading__message {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+@keyframes tf-loading-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

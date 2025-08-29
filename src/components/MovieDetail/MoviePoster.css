@@ -1,0 +1,117 @@
+/* MoviePoster Component Styles */
+.tf-movie-poster {
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 2rem;
+}
+
+.tf-movie-poster__container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.tf-movie-poster__image {
+  width: 280px;
+  height: 420px; /* 280 * 1.5 for perfect poster ratio */
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(1.05) contrast(1.1);
+}
+
+.tf-movie-poster__container:hover .tf-movie-poster__image {
+  transform: scale(1.05) translateY(-4px);
+  filter: brightness(1.1) contrast(1.15) saturate(1.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.tf-movie-poster__glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.tf-movie-poster__container:hover .tf-movie-poster__glow {
+  opacity: 1;
+}
+
+.tf-movie-poster__placeholder {
+  width: 280px;
+  height: 420px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%),
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.tf-movie-poster__placeholder::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tf-movie-poster__placeholder span {
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 720px) {
+  .tf-movie-poster {
+    margin-right: 1.5rem;
+  }
+
+  .tf-movie-poster__image,
+  .tf-movie-poster__placeholder {
+    width: 200px;
+    height: 300px; /* 200 * 1.5 */
+  }
+}
+
+@media (max-width: 480px) {
+  .tf-movie-poster {
+    margin-right: 1rem;
+  }
+
+  .tf-movie-poster__image,
+  .tf-movie-poster__placeholder {
+    width: 160px;
+    height: 240px; /* 160 * 1.5 */
+  }
+}
