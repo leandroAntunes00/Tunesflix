@@ -180,11 +180,17 @@ describe('tmdb service', () => {
     });
 
     it('valida ID numérico positivo', async () => {
+      // Restaurar fetch original para este teste
+      globalThis.fetch = realFetch;
+
       // Testa IDs que passam na validação obrigatória mas falham na numérica
       await expect(tmdb.getMovieDetails(0)).rejects.toThrow('ID deve ser um número positivo');
       await expect(tmdb.getMovieDetails(-1)).rejects.toThrow('ID deve ser um número positivo');
       await expect(tmdb.getMovieDetails(1.5)).rejects.toThrow('ID deve ser um número positivo');
       await expect(tmdb.getMovieDetails('abc')).rejects.toThrow('ID deve ser um número positivo');
+
+      // Restaurar mock para os próximos testes
+      globalThis.fetch = vi.fn();
     });
 
     it('retorna erro específico para filme não encontrado', async () => {

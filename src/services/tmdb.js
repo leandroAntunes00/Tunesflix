@@ -375,7 +375,7 @@ export async function getMovieDetails(id) {
   }
 
   const numericId = Number(id);
-  if (isNaN(numericId) || numericId <= 0) {
+  if (isNaN(numericId) || numericId <= 0 || !Number.isInteger(numericId)) {
     throw new Error('getMovieDetails: ID deve ser um número positivo');
   }
 

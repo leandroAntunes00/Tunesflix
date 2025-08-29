@@ -12,12 +12,12 @@ test('Header renderiza corretamente com navegação', () => {
   );
 
   // Verifica se o logo e nome estão presentes
-  expect(screen.getByAltText('Tunesflix')).toBeInTheDocument();
+  expect(screen.getByAltText('Tunesflix Logo')).toBeInTheDocument();
   expect(screen.getByText('Tunesflix')).toBeInTheDocument();
 
   // Verifica se os links de navegação estão presentes
-  expect(screen.getByRole('link', { name: /Início/i })).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /Favoritos/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Ir para página inicial/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Página de favoritos/i })).toBeInTheDocument();
 });
 
 test('Header links têm href corretos', () => {
@@ -32,6 +32,5 @@ test('Header links têm href corretos', () => {
     'href',
     '/'
   );
-  expect(screen.getByRole('link', { name: /Início/i })).toHaveAttribute('href', '/');
-  expect(screen.getByRole('link', { name: /Favoritos/i })).toHaveAttribute('href', '/favorites');
+  expect(screen.getByRole('link', { name: /Página de favoritos/i })).toHaveAttribute('href', '/favorites');
 });

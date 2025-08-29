@@ -27,7 +27,7 @@ test('SearchBar chama onSearch ao clicar no botão', async () => {
 
   render(<SearchBar defaultValue="" onSearch={onSearch} />);
   const input = screen.getByPlaceholderText(/buscar filmes/i);
-  const btn = screen.getByRole('button', { name: /buscar/i });
+  const btn = screen.getByRole('button', { name: /Executar busca/i });
 
   await user.type(input, 'matrix');
   await user.click(btn);
@@ -45,7 +45,7 @@ test('SearchBar limpa campo com botão de limpar', async () => {
   expect(input).toHaveValue('teste');
 
   // Botão de limpar deve aparecer quando há valor
-  const clearButton = screen.getByRole('button', { name: /limpar pesquisa/i });
+  const clearButton = screen.getByRole('button', { name: /Limpar campo de pesquisa/i });
   await user.click(clearButton);
 
   expect(input).toHaveValue('');
@@ -70,8 +70,8 @@ test('SearchBar limpa campo com tecla Escape', async () => {
 test('SearchBar tem acessibilidade correta', () => {
   render(<SearchBar />);
 
-  // Verifica se o form tem role correto
-  const form = screen.getByRole('search');
+  // Verifica se o form tem aria-label correto
+  const form = screen.getByLabelText('Formulário de busca de filmes');
   expect(form).toBeInTheDocument();
 
   // Verifica se o input tem label associada
@@ -80,7 +80,7 @@ test('SearchBar tem acessibilidade correta', () => {
   expect(input).toHaveAttribute('type', 'search');
 
   // Verifica se o botão de buscar tem aria-label
-  const searchButton = screen.getByRole('button', { name: /buscar/i });
+  const searchButton = screen.getByRole('button', { name: /Executar busca/i });
   expect(searchButton).toBeInTheDocument();
 });
 
@@ -91,18 +91,29 @@ test('SearchBar não mostra botão de limpar quando campo está vazio', () => {
   expect(input).toHaveValue('');
 
   // Botão de limpar não deve existir quando campo está vazio
-  const clearButton = screen.queryByRole('button', { name: /limpar pesquisa/i });
+  const clearButton = screen.queryByRole('button', { name: /Limpar campo de pesquisa/i });
   expect(clearButton).not.toBeInTheDocument();
 });
 
 test('SearchBar submete valor vazio corretamente', async () => {
   const user = userEvent.setup();
   const onSearch = vi.fn();
-
   render(<SearchBar onSearch={onSearch} />);
 
-  const searchButton = screen.getByRole('button', { name: /buscar/i });
-  await user.click(searchButton);
+  const input = screen.getByRole('searchbox', { name: /Campo de busca de filmes/i });
+  const searchButton = screen.getByRole('button', { name: /Executar busca/i });
 
-  expect(onSearch).toHaveBeenCalledWith('');
+  // Verificar que o botão está desabilitado quando o campo está vazio
+  expect(searchButton).toBeDisabled();
+
+  // Digitar algo para habilitar o botão
+  await user.type(input, 'teste');
+  expect(searchButton).not.toBeDisabled();
+
+  // Limpar o campo - botão deve ficar desabilitado novamente
+  await user.clear(input);
+  expect(searchButton).toBeDisabled();
+
+  // Verificar que onSearch não foi chamado ainda
+  expect(onSearch).not.toHaveBeenCalled();
 });
