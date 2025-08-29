@@ -1,14 +1,19 @@
-/* Styles for Pagination component */
+/* Pagination.css - Estilos para o componente de navegação por páginas */
+
+/* Container principal da paginação */
 .tf-pagination {
   display: flex;
   gap: 10px;
   align-items: center;
   justify-content: center;
-  margin-top: 1.25rem; /* mais espaço acima */
+  margin-top: 1.25rem;
+  padding: 0.5rem;
+  /* Flex wrap para responsividade */
+  flex-wrap: wrap;
 }
 
-/* Pagination buttons */
-.tf-pagination button {
+/* Botões de navegação (anterior/próximo) */
+.tf-pagination__button {
   background: linear-gradient(90deg, rgba(82, 91, 242, 0.14), rgba(57, 79, 122, 0.12));
   color: white;
   border: none;
@@ -17,26 +22,248 @@
   cursor: pointer;
   font-weight: 700;
   box-shadow: 0 6px 16px rgba(25, 30, 45, 0.06);
+  /* Transições suaves */
+  transition: all 0.2s ease;
+  /* Layout flex para ícones e texto */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 80px;
+  justify-content: center;
 }
 
-.tf-pagination button[disabled] {
+.tf-pagination__button:hover:not(:disabled) {
+  background: linear-gradient(90deg, rgba(82, 91, 242, 0.2), rgba(57, 79, 122, 0.18));
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(25, 30, 45, 0.1);
+}
+
+.tf-pagination__button:focus {
+  outline: 2px solid #525bf2;
+  outline-offset: 2px;
+}
+
+.tf-pagination__button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(25, 30, 45, 0.08);
+}
+
+.tf-pagination__button[disabled] {
   opacity: 0.45;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(25, 30, 45, 0.04);
 }
 
-.tf-pagination span {
-  color: var(--muted);
+.tf-pagination__button-icon {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+/* Informações da página atual */
+.tf-pagination__info {
+  display: flex;
+  align-items: center;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.tf-pagination__label {
+  color: var(--muted, #666);
   font-size: 0.98rem;
   font-weight: 600;
+  text-align: center;
 }
 
-@media (max-width: 520px) {
+.tf-pagination__context {
+  color: var(--text-secondary, #888);
+}
+
+.tf-pagination__current-number {
+  color: var(--primary, #525bf2);
+  font-weight: 700;
+}
+
+.tf-pagination__total {
+  color: var(--text-primary, #333);
+}
+
+/* Container dos números de página */
+.tf-pagination__pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 8px;
+}
+
+/* Botões de números de página */
+.tf-pagination__page-button {
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text-primary, #333);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.tf-pagination__page-button:hover:not(:disabled) {
+  background: rgba(82, 91, 242, 0.1);
+  border-color: rgba(82, 91, 242, 0.3);
+  transform: translateY(-1px);
+}
+
+.tf-pagination__page-button:focus {
+  outline: 2px solid #525bf2;
+  outline-offset: 2px;
+}
+
+.tf-pagination__page-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.tf-pagination__page-button--current {
+  background: #525bf2;
+  color: white;
+  border-color: #525bf2;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(82, 91, 242, 0.3);
+}
+
+.tf-pagination__page-button--current:hover {
+  background: #4048cc;
+  border-color: #4048cc;
+}
+
+.tf-pagination__page-button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Ellipsis (pontos de suspensão) */
+.tf-pagination__ellipsis {
+  color: var(--text-secondary, #888);
+  padding: 0 4px;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Classe utilitária para texto apenas para leitores de tela */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
   .tf-pagination {
-    gap: 6px;
+    gap: 8px;
     flex-direction: column;
     align-items: stretch;
   }
-  .tf-pagination button {
+
+  .tf-pagination__button {
     width: 100%;
+    padding: 10px 16px;
+    min-width: auto;
+  }
+
+  .tf-pagination__info {
+    order: -1;
+    margin-bottom: 8px;
+    min-width: auto;
+  }
+
+  .tf-pagination__pages {
+    margin: 8px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tf-pagination__page-button {
+    min-width: 32px;
+    height: 32px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tf-pagination {
+    gap: 6px;
+    padding: 0.25rem;
+  }
+
+  .tf-pagination__button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .tf-pagination__button-text {
+    display: none;
+  }
+
+  .tf-pagination__button-icon {
+    font-size: 1.4em;
+  }
+
+  .tf-pagination__pages {
+    gap: 2px;
+  }
+
+  .tf-pagination__page-button {
+    min-width: 28px;
+    height: 28px;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+  }
+
+  .tf-pagination__label {
+    font-size: 0.9rem;
+  }
+}
+
+/* Tema escuro */
+@media (prefers-color-scheme: dark) {
+  .tf-pagination__page-button {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #e1e1e1;
+  }
+
+  .tf-pagination__page-button:hover:not(:disabled) {
+    background: rgba(82, 91, 242, 0.15);
+  }
+
+  .tf-pagination__ellipsis {
+    color: #888;
+  }
+}
+
+/* Suporte a redução de movimento */
+@media (prefers-reduced-motion: reduce) {
+  .tf-pagination__button,
+  .tf-pagination__page-button {
+    transition: none;
+  }
+
+  .tf-pagination__button:hover:not(:disabled),
+  .tf-pagination__page-button:hover:not(:disabled) {
+    transform: none;
   }
 }
