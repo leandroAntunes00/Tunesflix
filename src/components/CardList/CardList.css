@@ -2,9 +2,9 @@
   display: grid;
   gap: 1.2rem; /* aumentar gap para dar respiro entre cards */
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  grid-auto-rows: 1fr; /* assegurar que as linhas ocupem espaço semelhante */
-  /* garante espaço mínimo para que, com poucos cards, o footer não suba */
-  min-height: calc(100vh - var(--site-header-footer-height, 220px));
+  /* Removido grid-auto-rows: 1fr para evitar expansão vertical desnecessária */
+  /* Ajustado min-height para ser menos agressivo */
+  min-height: 400px;
   align-content: start;
   padding: 0.6rem; /* padding interno para evitar colar nas bordas */
 }
