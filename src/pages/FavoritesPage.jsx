@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useFavorites } from '../hooks/useFavorites';
 import { useNavigation } from '../hooks/useNavigation';
 import { useMovieDetailsModal } from '../hooks/useMovieDetailsModal';
@@ -19,8 +20,11 @@ import MovieModal from '../components/MovieModal/MovieModal';
  * - Reutilização de hooks customizados
  * - Navegação consistente
  * - Tratamento adequado de estados vazios
+ *
+ * @param {Object} props
+ * @param {Function} [props.onNavigate] - Handler opcional para navegação externa
  */
-export default function FavoritesPage() {
+export default function FavoritesPage({ onNavigate }) {
   const { favorites, toggleFavorite } = useFavorites();
   const { navigateToMovie } = useNavigation();
 
@@ -40,6 +44,12 @@ export default function FavoritesPage() {
    */
   const handleNavigate = useCallback(
     (type, film) => {
+      // Se foi passada uma função externa, usa ela
+      if (onNavigate) {
+        onNavigate(type, film);
+        return;
+      }
+
       switch (type) {
         case 'detail':
           if (film?.id) {
@@ -55,7 +65,7 @@ export default function FavoritesPage() {
           console.warn('FavoritesPage: Tipo de navegação não reconhecido:', type);
       }
     },
-    [navigateToMovie, handleDetails]
+    [onNavigate, navigateToMovie, handleDetails]
   );
 
   /**
@@ -100,3 +110,12 @@ export default function FavoritesPage() {
     </>
   );
 }
+
+// Validação de props com PropTypes
+FavoritesPage.propTypes = {
+  onNavigate: PropTypes.func,
+};
+
+FavoritesPage.defaultProps = {
+  onNavigate: null,
+};

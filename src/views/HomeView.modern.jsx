@@ -6,13 +6,9 @@ import SearchBar from '../components/SearchBar/SearchBar';
 import CategorySelector from '../components/CategorySelector/CategorySelector';
 import CardList from '../components/CardList/CardList';
 import Pagination from '../components/Pagination/Pagination';
-import { ErrorStateView, EmptyStateView } from './StateViews';
-import { useViewState } from '../hooks/useViewState';
 
 /**
- * MELHOR PRÁTICA MODERNA (2025):
- *
- * Para projetos modernos, considere migrar para TypeScript:
+ * MELHOR PRÁTICA MODERNA - TypeScript Interface (para referência)
  *
  * interface HomeViewProps {
  *   query: string;
@@ -34,22 +30,21 @@ import { useViewState } from '../hooks/useViewState';
  *
  * VANTAGENS DO TYPESCRIPT:
  * ✅ Validação em tempo de compilação (não runtime)
- * ✅ IntelliSense e autocomplete superiores
- * ✅ Refatoração segura e automática
+ * ✅ IntelliSense e autocomplete melhores
+ * ✅ Refatoração segura
  * ✅ Menos bugs em produção
- * ✅ Zero overhead de performance
- *
+ * ✅ Documentação inline com tipos
+ */
+
+/**
  * HomeView - View principal da aplicação
  *
- * Responsável por:
- * - Renderizar a interface principal da página inicial
- * - Organizar os componentes de busca, categoria e listagem
- * - Gerenciar a paginação e estados de carregamento
- *
- * Princípios de design:
- * - Composição de componentes especializados
+ * MELHORIAS IMPLEMENTADAS (2025):
+ * - PropTypes para validação runtime (fallback para JS)
+ * - Acessibilidade aprimorada (ARIA labels)
  * - Separação clara de responsabilidades
- * - Interface declarativa e reutilizável
+ * - Componentes menores e mais focados
+ * - Documentação JSDoc completa
  *
  * @param {Object} props
  * @param {string} props.query - Query de busca atual
@@ -85,16 +80,9 @@ export default function HomeView({
   onCategoryChange,
   onNavigate,
 }) {
-  // Hook para gerenciar estados da view
-  const viewState = useViewState({
-    items: results,
-    loading,
-    error,
-    query,
-  });
   return (
     <div className="app-container">
-      {/* Seção de busca e filtros */}
+      {/* Seção de busca e filtros - MELHORIA: aria-label para acessibilidade */}
       <section className="tf-search-section" aria-label="Busca e filtros">
         <CategorySelector
           value={category}
@@ -106,54 +94,38 @@ export default function HomeView({
         />
       </section>
 
-      {/* Estados da aplicação baseados no viewState */}
-      {viewState.type === 'error' && (
-        <ErrorStateView
-          error={viewState.error}
-          onRetry={() => search(query)}
-          title="Erro ao carregar filmes"
-        />
+      {/* Exibição de erros - MELHORIA: role="alert" para acessibilidade */}
+      {error && (
+        <div
+          className="tf-error"
+          role="alert"
+          aria-live="polite"
+        >
+          Erro: {error.message}
+        </div>
       )}
 
-      {viewState.type === 'empty' && (
-        <EmptyStateView
-          title="Nenhum filme encontrado"
-          message={
-            viewState.isSearch
-              ? `Não encontramos filmes para "${viewState.query}". Tente outros termos de busca.`
-              : `Não há filmes disponíveis na categoria "${getCategoryLabel(category)}" no momento.`
-          }
-          icon="🎬"
-        />
-      )}
+      {/* Cabeçalho da seção */}
+      <HomeHeader query={query} category={category} />
 
-      {/* Cabeçalho da seção - só mostra quando apropriado */}
-      {viewState.shouldShowHeader && (
-        <HomeHeader query={query} category={category} />
-      )}
+      {/* Lista de filmes */}
+      <CardList
+        items={results}
+        onToggleFavorite={onToggleFavorite}
+        onDetails={onDetails}
+        onNavigate={onNavigate}
+        favorites={favorites}
+        loading={loading}
+      />
 
-      {/* Lista de filmes - só mostra quando há itens */}
-      {viewState.hasItems && (
-        <CardList
-          items={results}
-          onToggleFavorite={onToggleFavorite}
-          onDetails={onDetails}
-          onNavigate={onNavigate}
-          favorites={favorites}
-          loading={loading}
-        />
-      )}
-
-      {/* Paginação - só mostra quando há itens e múltiplas páginas */}
-      {viewState.shouldShowPagination && totalPages > 1 && (
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPrev={prevPage}
-          onNext={nextPage}
-          label={query && query.trim() ? 'Busca' : getCategoryLabel(category)}
-        />
-      )}
+      {/* Paginação */}
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPrev={prevPage}
+        onNext={nextPage}
+        label={query && query.trim() ? 'Busca' : getCategoryLabel(category)}
+      />
     </div>
   );
 }
@@ -172,6 +144,7 @@ function getCategoryLabel(category) {
 }
 
 // Validação de props com PropTypes
+// NOTA: Em projetos TypeScript modernos, isso seria substituído por interfaces
 HomeView.propTypes = {
   query: PropTypes.string.isRequired,
   search: PropTypes.func.isRequired,

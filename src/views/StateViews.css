@@ -1,0 +1,163 @@
+/* StateViews.css - Estilos para componentes de estado */
+
+/* Empty State */
+.tf-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.tf-empty-state__content {
+  max-width: 400px;
+}
+
+.tf-empty-state__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.tf-empty-state__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0 0 0.5rem 0;
+}
+
+.tf-empty-state__message {
+  color: var(--text-secondary, #666);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.tf-empty-state__action {
+  margin-top: 1rem;
+}
+
+/* Error State */
+.tf-error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--error-bg, #fef2f2);
+  border: 1px solid var(--error-border, #fecaca);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.tf-error-state__content {
+  max-width: 400px;
+}
+
+.tf-error-state__icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.tf-error-state__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--error-text, #dc2626);
+  margin: 0 0 0.5rem 0;
+}
+
+.tf-error-state__message {
+  color: var(--error-text-secondary, #991b1b);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.tf-error-state__retry {
+  background-color: var(--error-text, #dc2626);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tf-error-state__retry:hover {
+  background-color: var(--error-hover, #b91c1c);
+}
+
+.tf-error-state__retry:focus {
+  outline: 2px solid var(--error-text, #dc2626);
+  outline-offset: 2px;
+}
+
+/* Loading State */
+.tf-loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 2rem;
+}
+
+.tf-loading-state__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tf-loading-state__spinner {
+  border: 3px solid var(--loading-bg, #f3f4f6);
+  border-top: 3px solid var(--loading-primary, #3b82f6);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.tf-loading-state__spinner--small {
+  width: 24px;
+  height: 24px;
+}
+
+.tf-loading-state__spinner--medium {
+  width: 32px;
+  height: 32px;
+}
+
+.tf-loading-state__spinner--large {
+  width: 48px;
+  height: 48px;
+}
+
+.tf-loading-state__message {
+  color: var(--text-secondary, #666);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .tf-empty-state,
+  .tf-error-state,
+  .tf-loading-state {
+    padding: 1rem;
+    min-height: 200px;
+  }
+
+  .tf-empty-state__icon,
+  .tf-error-state__icon {
+    font-size: 2.5rem;
+  }
+
+  .tf-empty-state__title,
+  .tf-error-state__title {
+    font-size: 1.125rem;
+  }
+}

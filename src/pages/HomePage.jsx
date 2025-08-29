@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import useMovies from '../hooks/useMovies';
 import { useFavorites } from '../hooks/useFavorites';
 import { useNavigation } from '../hooks/useNavigation';
@@ -19,6 +20,16 @@ import MovieModal from '../components/MovieModal/MovieModal';
  * - Reutilização através de hooks customizados
  * - Tratamento robusto de erros
  * - Performance otimizada com memoização
+ *
+ * MELHOR PRÁTICA MODERNA:
+ * Para projetos React 2025, considere:
+ * 1. TypeScript para validação em tempo de compilação
+ * 2. Componentes funcionais com hooks
+ * 3. Validação de props com interfaces TypeScript
+ * 4. Eliminação de PropTypes (runtime overhead)
+ *
+ * @param {Object} props
+ * @param {Function} [props.onNavigate] - Handler opcional para navegação externa
  */
 export default function HomePage({ onNavigate }) {
   // Hooks principais da aplicação
@@ -109,3 +120,12 @@ export default function HomePage({ onNavigate }) {
     </>
   );
 }
+
+// Validação de props com PropTypes
+HomePage.propTypes = {
+  onNavigate: PropTypes.func,
+};
+
+HomePage.defaultProps = {
+  onNavigate: null,
+};

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { getMovieDetails } from '../services/tmdb';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -87,6 +88,10 @@ function useMovieDetailsState(id, initialFilm) {
  * - Composição de componentes especializados
  * - Estado gerenciado por hooks customizados
  * - Interface limpa e focada na montagem
+ *
+ * @param {Object} props
+ * @param {Object} [props.film] - Dados iniciais do filme
+ * @param {Function} [props.onBack] - Handler opcional para navegação de volta
  */
 export default function MovieDetailPage({ film: filmProp, onBack }) {
   const params = useParams();
@@ -147,3 +152,23 @@ export default function MovieDetailPage({ film: filmProp, onBack }) {
     </div>
   );
 }
+
+// Validação de props com PropTypes
+MovieDetailPage.propTypes = {
+  film: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    title: PropTypes.string,
+    poster_path: PropTypes.string,
+    backdrop_path: PropTypes.string,
+    release_date: PropTypes.string,
+    overview: PropTypes.string,
+    vote_average: PropTypes.number,
+    genre_ids: PropTypes.arrayOf(PropTypes.number),
+  }),
+  onBack: PropTypes.func,
+};
+
+MovieDetailPage.defaultProps = {
+  film: null,
+  onBack: null,
+};
