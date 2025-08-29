@@ -22,7 +22,7 @@ export default function Pagination({
   onPageChange,
   label,
   showPageNumbers = false,
-  maxVisiblePages = 5
+  maxVisiblePages = 5,
 }) {
   // Callbacks memoizados para performance
   const handlePrev = useCallback(() => {
@@ -37,22 +37,28 @@ export default function Pagination({
     }
   }, [page, totalPages, onNext]);
 
-  const handlePageClick = useCallback((pageNumber) => {
-    if (pageNumber !== page && onPageChange) {
-      onPageChange(pageNumber);
-    }
-  }, [page, onPageChange]);
+  const handlePageClick = useCallback(
+    (pageNumber) => {
+      if (pageNumber !== page && onPageChange) {
+        onPageChange(pageNumber);
+      }
+    },
+    [page, onPageChange]
+  );
 
   // Handler para navegação por teclado
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      handlePrev();
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      handleNext();
-    }
-  }, [handlePrev, handleNext]);
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleNext();
+      }
+    },
+    [handlePrev, handleNext]
+  );
 
   // Cálculo das páginas visíveis com ellipsis
   const visiblePages = useMemo(() => {
@@ -102,7 +108,9 @@ export default function Pagination({
         type="button"
       >
         <span className="tf-pagination__button-text">Anterior</span>
-        <span className="tf-pagination__button-icon" aria-hidden="true">‹</span>
+        <span className="tf-pagination__button-icon" aria-hidden="true">
+          ‹
+        </span>
       </button>
 
       {/* Informações da página atual */}
@@ -130,7 +138,9 @@ export default function Pagination({
               >
                 1
               </button>
-              <span className="tf-pagination__ellipsis" aria-hidden="true">…</span>
+              <span className="tf-pagination__ellipsis" aria-hidden="true">
+                …
+              </span>
             </>
           )}
 
@@ -154,7 +164,9 @@ export default function Pagination({
           {/* Última página + ellipsis */}
           {showEndEllipsis && (
             <>
-              <span className="tf-pagination__ellipsis" aria-hidden="true">…</span>
+              <span className="tf-pagination__ellipsis" aria-hidden="true">
+                …
+              </span>
               <button
                 onClick={() => handlePageClick(totalPages)}
                 className="tf-pagination__page-button"
@@ -178,7 +190,9 @@ export default function Pagination({
         type="button"
       >
         <span className="tf-pagination__button-text">Próxima</span>
-        <span className="tf-pagination__button-icon" aria-hidden="true">›</span>
+        <span className="tf-pagination__button-icon" aria-hidden="true">
+          ›
+        </span>
       </button>
     </nav>
   );

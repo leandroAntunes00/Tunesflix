@@ -1,7 +1,87 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { searchMovies } from '../services/tmdb';
 
-// Hook para buscar filmes por query
+/**
+ * Hook personalizado para busca de filmes com funcionalidades avançadas
+ *
+ * Fornece busca de filmes com:
+ * - Controle de condições de corrida
+ * - Navegação por páginas
+ * - Validação de entrada
+ * - Estados computados para UX
+ * - Reset completo do estado
+ * - Prevenção de requisições desnecessárias
+ *
+ * @param {string} initialQuery - Query inicial para busca (opcional)
+ * @param {number} initialPage - Página inicial (padrão: 1)
+ * @returns {Object} Objeto com estado e funções de busca
+ * @returns {string} return.query - Query atual de busca
+ * @returns {Function} return.setQuery - Função para atualizar query (não faz busca automática)
+ * @returns {Function} return.search - Função para executar busca com query e página específicas
+ * @returns {number} return.page - Página atual
+ * @returns {Function} return.setPage - Função para ir para página específica
+ * @returns {Function} return.nextPage - Função para próxima página
+ * @returns {Function} return.prevPage - Função para página anterior
+ * @returns {Array} return.results - Array com resultados da busca
+ * @returns {number} return.totalPages - Total de páginas disponíveis
+ * @returns {number} return.totalResults - Total de resultados encontrados
+ * @returns {boolean} return.loading - Indica se está carregando
+ * @returns {Error|null} return.error - Erro ocorrido ou null
+ * @returns {Function} return.reset - Função para resetar estado
+ * @returns {boolean} return.hasResults - Indica se há resultados
+ * @returns {boolean} return.hasError - Indica se há erro
+ * @returns {boolean} return.canGoNext - Indica se pode ir para próxima página
+ * @returns {boolean} return.canGoPrev - Indica se pode ir para página anterior
+ * @returns {boolean} return.isEmptyQuery - Indica se query está vazia
+ *
+ * @example
+ * ```jsx
+ * import { useMovieSearch } from '../hooks/useMovieSearch';
+ *
+ * function SearchComponent() {
+ *   const {
+ *     query,
+ *     setQuery,
+ *     search,
+ *     results,
+ *     loading,
+ *     hasResults,
+ *     nextPage,
+ *     canGoNext
+ *   } = useMovieSearch();
+ *
+ *   const handleSearch = () => {
+ *     if (query.trim()) {
+ *       search(query);
+ *     }
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <input
+ *         value={query}
+ *         onChange={(e) => setQuery(e.target.value)}
+ *         placeholder="Buscar filmes..."
+ *       />
+ *       <button onClick={handleSearch} disabled={loading}>
+ *         {loading ? 'Buscando...' : 'Buscar'}
+ *       </button>
+ *
+ *       {hasResults && (
+ *         <div>
+ *           {results.map(movie => (
+ *             <div key={movie.id}>{movie.title}</div>
+ *           ))}
+ *           {canGoNext && (
+ *             <button onClick={nextPage}>Próxima página</button>
+ *           )}
+ *         </div>
+ *       )}
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export default function useMovieSearch(initialQuery = '', initialPage = 1) {
   const [query, setQuery] = useState(initialQuery);
   const [page, setPage] = useState(initialPage);
@@ -11,12 +91,26 @@ export default function useMovieSearch(initialQuery = '', initialPage = 1) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // request id para evitar condições de corrida
+  // Request ID para evitar condições de corrida
   const requestRef = useRef(0);
 
+  // Estados computados memoizados
+  const hasResults = useMemo(() => results.length > 0, [results.length]);
+  const hasError = useMemo(() => error !== null, [error]);
+  const canGoNext = useMemo(() => page < totalPages, [page, totalPages]);
+  const canGoPrev = useMemo(() => page > 1, [page]);
+  const isEmptyQuery = useMemo(() => !query.trim(), [query]);
+
+  /**
+   * Executa busca de filmes
+   * @param {string} q - Query de busca
+   * @param {number} p - Página (padrão: 1)
+   */
   const search = useCallback(async (q, p = 1) => {
-    const trimmed = (q || '').trim();
-    if (!trimmed) {
+    const trimmedQuery = (q || '').trim();
+
+    // Validação da query
+    if (!trimmedQuery) {
       setResults([]);
       setTotalPages(0);
       setTotalResults(0);
@@ -26,41 +120,95 @@ export default function useMovieSearch(initialQuery = '', initialPage = 1) {
       return;
     }
 
+    // Validação da página
+    const targetPage = Math.max(1, Math.floor(p) || 1);
+
     const thisRequest = ++requestRef.current;
     setLoading(true);
     setError(null);
 
     try {
-      const res = await searchMovies(trimmed, p);
-      // ignorar respostas antigas
+      const response = await searchMovies(trimmedQuery, targetPage);
+
+      // Verificar se esta é a resposta mais recente (evitar condições de corrida)
       if (thisRequest !== requestRef.current) return;
 
-      setResults(res.results || []);
-      setTotalPages(res.total_pages || 0);
-      setTotalResults(res.total_results || 0);
-      setPage(res.page || p);
-      setQuery(trimmed);
+      // Validação da resposta
+      if (!response || typeof response !== 'object') {
+        throw new Error('Resposta inválida do servidor');
+      }
+
+      const {
+        results: searchResults = [],
+        total_pages = 0,
+        total_results = 0,
+        page: responsePage = targetPage,
+      } = response;
+
+      // Validação dos dados
+      if (!Array.isArray(searchResults)) {
+        throw new Error('Formato de resultados inválido');
+      }
+
+      setResults(searchResults);
+      setTotalPages(Math.max(0, total_pages));
+      setTotalResults(Math.max(0, total_results));
+      setPage(responsePage);
+      setQuery(trimmedQuery);
     } catch (err) {
+      // Verificar se esta é a resposta mais recente
       if (thisRequest !== requestRef.current) return;
-      setError(err);
+
+      const errorMessage = err?.message || 'Erro ao buscar filmes';
+      setError(new Error(errorMessage));
+      setResults([]);
+      setTotalPages(0);
+      setTotalResults(0);
     } finally {
-      if (thisRequest === requestRef.current) setLoading(false);
+      // Só atualizar loading se esta for a resposta mais recente
+      if (thisRequest === requestRef.current) {
+        setLoading(false);
+      }
     }
   }, []);
 
+  /**
+   * Vai para página específica
+   * @param {number} p - Página alvo
+   */
   const goToPage = useCallback(
     (p) => {
-      const target = Math.max(1, Math.floor(p));
-      search(query, target);
+      const targetPage = Math.max(1, Math.floor(p));
+      if (targetPage !== page && query.trim()) {
+        search(query, targetPage);
+      }
     },
-    [search, query]
+    [search, query, page]
   );
 
-  const nextPage = useCallback(() => goToPage(page + 1), [goToPage, page]);
-  const prevPage = useCallback(() => goToPage(page - 1), [goToPage, page]);
+  /**
+   * Vai para próxima página
+   */
+  const nextPage = useCallback(() => {
+    if (canGoNext) {
+      goToPage(page + 1);
+    }
+  }, [goToPage, page, canGoNext]);
 
+  /**
+   * Vai para página anterior
+   */
+  const prevPage = useCallback(() => {
+    if (canGoPrev) {
+      goToPage(page - 1);
+    }
+  }, [goToPage, page, canGoPrev]);
+
+  /**
+   * Reseta completamente o estado da busca
+   */
   const reset = useCallback(() => {
-    requestRef.current++;
+    requestRef.current++; // Cancela requisições pendentes
     setQuery('');
     setPage(1);
     setResults([]);
@@ -71,18 +219,28 @@ export default function useMovieSearch(initialQuery = '', initialPage = 1) {
   }, []);
 
   return {
+    // Estado
     query,
-    setQuery,
-    search,
     page,
-    setPage: goToPage,
-    nextPage,
-    prevPage,
     results,
     totalPages,
     totalResults,
     loading,
     error,
+
+    // Funções
+    setQuery,
+    search,
+    setPage: goToPage,
+    nextPage,
+    prevPage,
     reset,
+
+    // Estados computados
+    hasResults,
+    hasError,
+    canGoNext,
+    canGoPrev,
+    isEmptyQuery,
   };
 }

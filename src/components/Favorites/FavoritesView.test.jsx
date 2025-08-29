@@ -29,11 +29,16 @@ vi.mock('../CardList/CardList', () => ({
           </button>
           <button
             onClick={() => onToggleFavorite?.(item.id)}
-            aria-label={favorites.has(item.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+            aria-label={
+              favorites.has(item.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'
+            }
           >
             {favorites.has(item.id) ? 'Favorito' : 'Não favorito'}
           </button>
-          <button onClick={() => onNavigate?.('detail', item)} aria-label={`Ver detalhes de ${item.title}`}>
+          <button
+            onClick={() => onNavigate?.('detail', item)}
+            aria-label={`Ver detalhes de ${item.title}`}
+          >
             Navegar
           </button>
         </div>
@@ -62,7 +67,9 @@ describe('FavoritesView', () => {
       );
 
       expect(screen.getByText('Você ainda não tem filmes favoritos.')).toBeInTheDocument();
-      expect(screen.getByText('Adicione alguns filmes aos seus favoritos para vê-los aqui!')).toBeInTheDocument();
+      expect(
+        screen.getByText('Adicione alguns filmes aos seus favoritos para vê-los aqui!')
+      ).toBeInTheDocument();
       expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
     });
 
@@ -356,7 +363,9 @@ describe('FavoritesView', () => {
 
       expect(screen.getAllByRole('button', { name: /detalhes de filme teste/i })).toHaveLength(2);
       expect(screen.getByRole('button', { name: /remover dos favoritos/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /ver detalhes de filme teste/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /ver detalhes de filme teste/i })
+      ).toBeInTheDocument();
     });
   });
 });
@@ -381,11 +390,16 @@ vi.mock('../CardList/CardList', () => ({
           </button>
           <button
             onClick={() => onToggleFavorite?.(item.id)}
-            aria-label={favorites.has(item.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+            aria-label={
+              favorites.has(item.id) ? 'Remover dos favoritos' : 'Adicionar aos favoritos'
+            }
           >
             {favorites.has(item.id) ? 'Favorito' : 'Não favorito'}
           </button>
-          <button onClick={() => onNavigate?.('detail', item)} aria-label={`Ver detalhes de ${item.title}`}>
+          <button
+            onClick={() => onNavigate?.('detail', item)}
+            aria-label={`Ver detalhes de ${item.title}`}
+          >
             Navegar
           </button>
         </div>
@@ -414,7 +428,9 @@ describe('FavoritesView', () => {
       );
 
       expect(screen.getByText('Você ainda não tem filmes favoritos.')).toBeInTheDocument();
-      expect(screen.getByText('Adicione alguns filmes aos seus favoritos para vê-los aqui!')).toBeInTheDocument();
+      expect(
+        screen.getByText('Adicione alguns filmes aos seus favoritos para vê-los aqui!')
+      ).toBeInTheDocument();
       expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
     });
 
@@ -703,7 +719,9 @@ describe('FavoritesView', () => {
 
       expect(screen.getAllByRole('button', { name: /detalhes de filme teste/i })).toHaveLength(2);
       expect(screen.getByRole('button', { name: /remover dos favoritos/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /ver detalhes de filme teste/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /ver detalhes de filme teste/i })
+      ).toBeInTheDocument();
     });
   });
 });

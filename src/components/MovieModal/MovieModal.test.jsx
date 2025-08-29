@@ -86,14 +86,7 @@ describe('MovieModal', () => {
 
     test('mostra loading e erro simultaneamente', () => {
       const error = new Error('Erro de rede');
-      render(
-        <MovieModal
-          open={true}
-          onClose={onClose}
-          loading={true}
-          error={error}
-        />
-      );
+      render(<MovieModal open={true} onClose={onClose} loading={true} error={error} />);
 
       expect(screen.getByRole('status')).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -273,7 +266,10 @@ describe('MovieModal', () => {
       render(<MovieModal open={true} onClose={onClose} details={mockMovieDetails} />);
 
       expect(screen.getByRole('heading', { level: 2 })).toHaveAttribute('id', 'movie-modal-title');
-      expect(screen.getByTestId('movie-modal-content')).toHaveAttribute('id', 'movie-modal-content');
+      expect(screen.getByTestId('movie-modal-content')).toHaveAttribute(
+        'id',
+        'movie-modal-content'
+      );
     });
   });
 

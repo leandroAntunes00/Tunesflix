@@ -133,7 +133,11 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
         )}
 
         {details && (
-          <div id="movie-modal-content" className="tf-modal__content" data-testid="movie-modal-content">
+          <div
+            id="movie-modal-content"
+            className="tf-modal__content"
+            data-testid="movie-modal-content"
+          >
             <header className="tf-modal__header">
               <h2 id="movie-modal-title" className="tf-modal__title">
                 {details.title || details.name || 'Título não disponível'}
@@ -147,9 +151,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
                 {details.release_date && (
                   <span>{new Date(details.release_date).getFullYear()}</span>
                 )}
-                {details.runtime && (
-                  <span>{details.runtime} min</span>
-                )}
+                {details.runtime && <span>{details.runtime} min</span>}
                 {details.release_date && details.runtime && <span>•</span>}
               </div>
             </header>
@@ -174,9 +176,7 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
               </figure>
 
               <div className="tf-modal__info">
-                {details.overview && (
-                  <p className="tf-modal__overview">{details.overview}</p>
-                )}
+                {details.overview && <p className="tf-modal__overview">{details.overview}</p>}
 
                 {details.genres && details.genres.length > 0 && (
                   <p>
@@ -188,7 +188,9 @@ export default function MovieModal({ open, onClose, loading, details, error }) {
                 {details.production_companies && details.production_companies.length > 0 && (
                   <p>
                     <strong>Produção:</strong>{' '}
-                    <span>{details.production_companies.map((company) => company.name).join(', ')}</span>
+                    <span>
+                      {details.production_companies.map((company) => company.name).join(', ')}
+                    </span>
                   </p>
                 )}
 

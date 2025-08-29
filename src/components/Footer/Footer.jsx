@@ -12,10 +12,7 @@ export default function Footer() {
     <footer className="tf-footer" role="contentinfo">
       <div className="tf-footer__inner">
         <p className="tf-footer__copyright">
-          © Tunesflix —{' '}
-          <time dateTime={currentYear.toString()}>
-            {currentYear}
-          </time>
+          © Tunesflix — <time dateTime={currentYear.toString()}>{currentYear}</time>
         </p>
       </div>
     </footer>

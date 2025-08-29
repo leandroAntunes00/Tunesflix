@@ -11,7 +11,7 @@ const mockFilm = {
   release_date: '2020-01-01',
   poster_path: '/test-poster.jpg',
   vote_average: 8.5,
-  overview: 'This is a test movie overview'
+  overview: 'This is a test movie overview',
 };
 
 const mockFilmWithoutData = {
@@ -20,7 +20,7 @@ const mockFilmWithoutData = {
   first_air_date: '2021-06-15',
   poster: null,
   vote_average: null,
-  overview: ''
+  overview: '',
 };
 
 test('renderiza corretamente com dados completos', () => {
@@ -79,11 +79,7 @@ test('chama handlers corretamente', async () => {
 
   render(
     <MemoryRouter>
-      <CardFilm
-        film={mockFilm}
-        onDetails={onDetails}
-        onToggleFavorite={onToggleFavorite}
-      />
+      <CardFilm film={mockFilm} onDetails={onDetails} onToggleFavorite={onToggleFavorite} />
     </MemoryRouter>
   );
 

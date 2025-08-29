@@ -49,7 +49,7 @@ describe('Pagination', () => {
       // Verifica se o componente renderiza corretamente
       const nav = screen.getByRole('navigation');
       expect(nav).toBeInTheDocument();
-      
+
       // Verifica se os números estão presentes
       expect(screen.getByText('3')).toBeInTheDocument();
       expect(screen.getByText('10')).toBeInTheDocument();
@@ -57,19 +57,13 @@ describe('Pagination', () => {
 
     test('mostra label quando fornecido', () => {
       render(
-        <Pagination
-          page={2}
-          totalPages={8}
-          onPrev={onPrev}
-          onNext={onNext}
-          label="Populares"
-        />
+        <Pagination page={2} totalPages={8} onPrev={onPrev} onNext={onNext} label="Populares" />
       );
 
       // Verifica se o componente renderiza com o label correto
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveAttribute('aria-label', 'Navegação de páginas para Populares');
-      
+
       // Verifica se os números estão presentes
       expect(screen.getByText('2')).toBeInTheDocument();
       expect(screen.getByText('8')).toBeInTheDocument();
@@ -344,7 +338,7 @@ describe('Pagination', () => {
       const elementsWith1000 = screen.getAllByText('1000');
       expect(elementsWith1000.length).toBeGreaterThan(0);
       expect(screen.getAllByText('…')).toHaveLength(2);
-      
+
       // Verifica se há pelo menos um botão com "50"
       const buttonsWith50 = screen.getAllByText('50');
       expect(buttonsWith50.length).toBeGreaterThan(0);
@@ -399,9 +393,9 @@ describe('Pagination', () => {
         />
       );
 
-      const pageButtons1 = screen.getAllByRole('button').filter(btn =>
-        btn.getAttribute('aria-label')?.startsWith('Página ')
-      );
+      const pageButtons1 = screen
+        .getAllByRole('button')
+        .filter((btn) => btn.getAttribute('aria-label')?.startsWith('Página '));
 
       rerender(
         <Pagination
@@ -413,9 +407,9 @@ describe('Pagination', () => {
         />
       );
 
-      const pageButtons2 = screen.getAllByRole('button').filter(btn =>
-        btn.getAttribute('aria-label')?.startsWith('Página ')
-      );
+      const pageButtons2 = screen
+        .getAllByRole('button')
+        .filter((btn) => btn.getAttribute('aria-label')?.startsWith('Página '));
 
       // Mesmo número de botões (não recalculado desnecessariamente)
       expect(pageButtons1).toHaveLength(pageButtons2.length);

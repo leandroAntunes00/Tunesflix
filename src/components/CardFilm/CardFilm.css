@@ -4,7 +4,7 @@
   flex-direction: column;
   gap: 0.6rem;
   background: var(--card);
-  padding: 0.45rem; 
+  padding: 0.45rem;
   border-radius: var(--radius-md);
   box-shadow: var(--card-shadow);
   transition:

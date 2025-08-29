@@ -23,7 +23,8 @@ export default function FavoritesView({ favorites: favProp, onToggleFavorite, on
   // Normaliza os dados dos filmes favoritos para formato consistente
   const normalizedMovies = useMemo(() => {
     // Usa props se fornecidas, senão usa contexto
-    const favData = favProp && Object.keys(favProp).length ? favProp : favoritesContext.favorites || {};
+    const favData =
+      favProp && Object.keys(favProp).length ? favProp : favoritesContext.favorites || {};
 
     return Object.values(favData).map((movie) => ({
       id: movie.id,

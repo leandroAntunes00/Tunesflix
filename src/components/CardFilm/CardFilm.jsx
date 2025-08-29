@@ -11,7 +11,13 @@ import './CardFilm.css';
  * @param {boolean} isFavorite - Se o item está nos favoritos
  * @param {Function} onNavigate - Callback para navegação (opcional)
  */
-export default function CardFilm({ film = {}, onDetails, onToggleFavorite, isFavorite = false, onNavigate }) {
+export default function CardFilm({
+  film = {},
+  onDetails,
+  onToggleFavorite,
+  isFavorite = false,
+  onNavigate,
+}) {
   // Extração e processamento dos dados do filme
   const title = film.title || film.name || 'Sem título';
   const releaseDate = film.release_date || film.first_air_date || '';

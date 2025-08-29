@@ -14,7 +14,7 @@ export default function HomeHeader({ query, category = 'popular' }) {
 
   // Mapeamento das informações de categoria
   const categoryInfo = {
-    'popular': {
+    popular: {
       title: 'Populares',
       subtitle: 'Filmes populares no momento',
     },
