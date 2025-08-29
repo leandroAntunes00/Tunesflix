@@ -124,6 +124,13 @@ export function FavoritesProvider({ children }) {
           next[key] = normalizeFavoriteFilm(film);
         }
 
+        // Persistir imediatamente para evitar race conditions em testes
+        try {
+          if (typeof window !== 'undefined') saveFavorites(next);
+        } catch (e) {
+          console.warn('Falha ao salvar favoritos sincronamente:', e);
+        }
+
         return next;
       });
     } catch (err) {
@@ -169,7 +176,15 @@ export function FavoritesProvider({ children }) {
   const clearFavorites = useCallback(() => {
     try {
       setError(null);
-      setFavorites({});
+      setFavorites(() => {
+        const next = {};
+        try {
+          if (typeof window !== 'undefined') saveFavorites(next);
+        } catch (e) {
+          console.warn('Falha ao salvar favoritos sincronamente:', e);
+        }
+        return next;
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao limpar favoritos';
       setError(new Error(errorMessage));
@@ -200,6 +215,12 @@ export function FavoritesProvider({ children }) {
             next[key] = normalizeFavoriteFilm(film);
           }
         });
+
+        try {
+          if (typeof window !== 'undefined') saveFavorites(next);
+        } catch (e) {
+          console.warn('Falha ao salvar favoritos sincronamente:', e);
+        }
 
         return next;
       });
