@@ -120,10 +120,7 @@ class SmartCache {
 }
 
 // Instâncias de cache
-const DETAILS_CACHE = new SmartCache(
-  TMDB_CONFIG.cache.maxSize,
-  TMDB_CONFIG.cache.ttl
-);
+const DETAILS_CACHE = new SmartCache(TMDB_CONFIG.cache.maxSize, TMDB_CONFIG.cache.ttl);
 
 const SEARCH_CACHE = new SmartCache(50, 10 * 60 * 1000); // 10 min para busca
 const POPULAR_CACHE = new SmartCache(20, 15 * 60 * 1000); // 15 min para populares
@@ -227,7 +224,7 @@ export async function searchMovies(query, page = 1) {
     logger.info('Busca concluída com sucesso', {
       query: trimmedQuery,
       page,
-      results: data.total_results
+      results: data.total_results,
     });
 
     return data;
@@ -415,7 +412,7 @@ export async function getMovieDetails(id) {
 
     logger.info('Detalhes do filme obtidos com sucesso', {
       id: numericId,
-      title: data.title
+      title: data.title,
     });
 
     return data;
@@ -466,14 +463,15 @@ function buildUrl(path, params = {}) {
  * @throws {Error} Erro com status HTTP e mensagem detalhada
  */
 async function safeFetch(url, options = {}, attempt = 1) {
-  const { timeout = TMDB_CONFIG.api.timeout, retryAttempts = TMDB_CONFIG.api.retryAttempts } = options;
+  const { timeout = TMDB_CONFIG.api.timeout, retryAttempts = TMDB_CONFIG.api.retryAttempts } =
+    options;
 
   try {
     logger.debug('Fazendo requisição HTTP', { url, attempt, timeout });
 
     const headers = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       ...(options.headers || {}),
     };
 
@@ -513,13 +511,12 @@ async function safeFetch(url, options = {}, attempt = 1) {
     logger.debug('Requisição HTTP bem-sucedida', { url, attempt });
 
     return data;
-
   } catch (error) {
     logger.warn('Erro na requisição HTTP', {
       url,
       attempt,
       error: error.message,
-      isRetryable: isRetryableError(error)
+      isRetryable: isRetryableError(error),
     });
 
     // Retry para erros retryáveis
@@ -527,7 +524,7 @@ async function safeFetch(url, options = {}, attempt = 1) {
       const delay = TMDB_CONFIG.api.retryDelay * Math.pow(2, attempt - 1); // Exponential backoff
       logger.info(`Tentando novamente em ${delay}ms`, { url, attempt: attempt + 1 });
 
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise((resolve) => setTimeout(resolve, delay));
       return safeFetch(url, options, attempt + 1);
     }
 
@@ -558,7 +555,8 @@ function isRetryableError(error) {
   }
 
   // Erros específicos que podem ser temporários
-  if (error.status === 429) { // Too Many Requests
+  if (error.status === 429) {
+    // Too Many Requests
     return true;
   }
 
@@ -761,9 +759,7 @@ export function getCacheStats() {
 export function withTimeout(promise, ms = TMDB_CONFIG.api.timeout, message = 'Requisição expirou') {
   return Promise.race([
     promise,
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(message)), ms)
-    ),
+    new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
   ]);
 }
 

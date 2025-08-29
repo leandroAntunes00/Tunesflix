@@ -40,7 +40,7 @@ export function createConfig(config, defaults = {}) {
 function deepMerge(target, source) {
   const result = { ...target };
 
-  Object.keys(source).forEach(key => {
+  Object.keys(source).forEach((key) => {
     if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
       result[key] = deepMerge(result[key] || {}, source[key]);
     } else {
@@ -85,7 +85,9 @@ export function getEnv(key, defaultValue = null) {
  * @throws {Error} Se alguma chave obrigatória estiver faltando
  */
 export function validateConfig(config, requiredKeys = []) {
-  const missing = requiredKeys.filter(key => !(key in config) || config[key] === null || config[key] === undefined);
+  const missing = requiredKeys.filter(
+    (key) => !(key in config) || config[key] === null || config[key] === undefined
+  );
 
   if (missing.length > 0) {
     throw new Error(`Configuração obrigatória faltando: ${missing.join(', ')}`);
@@ -99,7 +101,7 @@ export function validateConfig(config, requiredKeys = []) {
  * @returns {Object} Objeto congelado
  */
 export function deepFreeze(obj) {
-  Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach((key) => {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
       deepFreeze(obj[key]);
     }

@@ -28,7 +28,7 @@ test('FavoritesView permite remover favorito via contexto', async () => {
   await user.click(btn);
 
   // após remover, a view deve exibir a mensagem de vazio
-  expect(await screen.findByText(/Nenhum favorito ainda/i)).toBeInTheDocument();
+  expect(await screen.findByText(/Você ainda não tem filmes favoritos/i)).toBeInTheDocument();
 
   const after = JSON.parse(localStorage.getItem(key) || '{}');
   expect(after['20']).toBeUndefined();

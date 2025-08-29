@@ -2,9 +2,7 @@ import React from 'react';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import './App.css';
-import FavoritesView from './components/Favorites/FavoritesView';
-import HomePage from './pages/HomePage';
-import MovieDetailPage from './pages/MovieDetailPage';
+import { HomePage, FavoritesPage, MovieDetailPage } from './pages';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
 function App() {
@@ -29,15 +27,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/favorites"
-            element={
-              <section>
-                <h2>Favoritos</h2>
-                <FavoritesView />
-              </section>
-            }
-          />
+          <Route path="/favorites" element={<FavoritesPage />} />
 
           <Route path="/movie/:id" element={<MovieDetailPage />} />
         </Routes>

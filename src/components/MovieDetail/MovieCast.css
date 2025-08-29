@@ -1,0 +1,67 @@
+/* MovieCast Component Styles */
+.tf-movie-cast {
+  margin-top: 1.5rem;
+}
+
+.tf-movie-cast__title {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tf-movie-cast__list {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tf-movie-cast__member {
+  background: var(--glass);
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: background-color 0.2s ease;
+}
+
+.tf-movie-cast__member:hover {
+  background: var(--glass-hover);
+}
+
+.tf-movie-cast__name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.tf-movie-cast__character {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.2;
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .tf-movie-cast__list {
+    gap: 0.4rem;
+  }
+
+  .tf-movie-cast__member {
+    padding: 0.3rem 0.5rem;
+  }
+
+  .tf-movie-cast__name {
+    font-size: 0.8rem;
+  }
+
+  .tf-movie-cast__character {
+    font-size: 0.7rem;
+  }
+}

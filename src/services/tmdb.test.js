@@ -108,7 +108,7 @@ describe('tmdb service', () => {
         results: [],
         page: 1,
         total_pages: 0,
-        total_results: 0
+        total_results: 0,
       });
     });
 
@@ -288,14 +288,16 @@ describe('tmdb service', () => {
     });
 
     it('withTimeout aplica timeout corretamente', async () => {
-      const slowPromise = new Promise(resolve => setTimeout(() => resolve('done'), 100));
+      const slowPromise = new Promise((resolve) => setTimeout(() => resolve('done'), 100));
       const result = await tmdb.withTimeout(slowPromise, 200);
       expect(result).toBe('done');
     });
 
     it('withTimeout lança erro em timeout', async () => {
-      const slowPromise = new Promise(resolve => setTimeout(() => resolve('done'), 200));
-      await expect(tmdb.withTimeout(slowPromise, 100, 'Custom timeout')).rejects.toThrow('Custom timeout');
+      const slowPromise = new Promise((resolve) => setTimeout(() => resolve('done'), 200));
+      await expect(tmdb.withTimeout(slowPromise, 100, 'Custom timeout')).rejects.toThrow(
+        'Custom timeout'
+      );
     });
   });
 });

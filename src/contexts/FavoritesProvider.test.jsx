@@ -154,6 +154,7 @@ describe('FavoritesProvider', () => {
         overview: 'Test overview',
         vote_average: 8.5,
         genre_ids: [1, 2, 3],
+        backdrop_path: null,
       });
     });
 
@@ -268,6 +269,7 @@ describe('FavoritesProvider', () => {
         overview: null,
         vote_average: null,
         genre_ids: [],
+        backdrop_path: null,
       });
     });
 
@@ -319,8 +321,9 @@ describe('FavoritesProvider', () => {
         result.current.addMultipleFavorites(films);
       });
 
-      expect(result.current.count).toBe(1); // apenas o válido
+      expect(result.current.count).toBe(2); // o primeiro e o terceiro (sem title mas com id)
       expect(result.current.favorites['10']).toBeDefined();
+      expect(result.current.favorites['20']).toBeDefined();
     });
   });
 
