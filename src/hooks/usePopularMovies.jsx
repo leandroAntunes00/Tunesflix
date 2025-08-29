@@ -1,7 +1,29 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { fetchPopularMovies } from '../services/tmdb';
 
-// Hook para buscar filmes populares
+/**
+ * Hook personalizado para gerenciamento de filmes populares
+ *
+ * Fornece funcionalidades completas para buscar e navegar por filmes populares,
+ * com controle de condições de corrida, paginação inteligente e estados computados
+ * para melhor experiência do usuário.
+ *
+ * @param {number} initialPage - Página inicial para carregamento (padrão: 1)
+ * @returns {Object} Estado e funções do hook
+ *
+ * @example
+ * ```jsx
+ * const {
+ *   results,
+ *   loading,
+ *   hasResults,
+ *   canGoNext,
+ *   fetchMovies,
+ *   nextPage,
+ *   reset
+ * } = usePopularMovies(1);
+ * ```
+ */
 export default function usePopularMovies(initialPage = 1) {
   const [page, setPage] = useState(initialPage);
   const [results, setResults] = useState([]);
@@ -10,41 +32,110 @@ export default function usePopularMovies(initialPage = 1) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // request id para evitar condições de corrida
+  // Request ID para evitar condições de corrida
   const requestRef = useRef(0);
 
-  const fetchMovies = useCallback(async (p = 1) => {
-    const thisRequest = ++requestRef.current;
-    setLoading(true);
-    setError(null);
+  // Estados computados memoizados
+  const hasResults = useMemo(() => {
+    return results && results.length > 0;
+  }, [results]);
 
-    try {
-      const res = await fetchPopularMovies(p);
-      // ignorar respostas antigas
-      if (thisRequest !== requestRef.current) return;
+  const canGoNext = useMemo(() => {
+    return page < totalPages && !loading;
+  }, [page, totalPages, loading]);
 
-      setResults(res.results || []);
-      setTotalPages(res.total_pages || 0);
-      setTotalResults(res.total_results || 0);
-      setPage(res.page || p);
-    } catch (err) {
-      if (thisRequest !== requestRef.current) return;
-      setError(err);
-    } finally {
-      if (thisRequest === requestRef.current) setLoading(false);
+  const canGoPrev = useMemo(() => {
+    return page > 1 && !loading;
+  }, [page, loading]);
+
+  const hasError = useMemo(() => {
+    return Boolean(error);
+  }, [error]);
+
+  const isEmpty = useMemo(() => {
+    return !loading && !hasError && !hasResults;
+  }, [loading, hasError, hasResults]);
+
+  // Validação de página
+  const validatePage = useCallback((targetPage) => {
+    if (typeof targetPage !== 'number' || isNaN(targetPage)) {
+      return 1; // fallback para página 1
     }
+    return Math.max(1, Math.floor(targetPage));
   }, []);
 
-  const goToPage = useCallback(
-    (p) => {
-      const target = Math.max(1, Math.floor(p));
-      fetchMovies(target);
+  // Validação de resposta da API
+  const validateResponse = useCallback((response) => {
+    if (!response || typeof response !== 'object') {
+      throw new Error('Resposta inválida do servidor');
+    }
+
+    return {
+      results: Array.isArray(response.results) ? response.results : [],
+      page: typeof response.page === 'number' ? response.page : 1,
+      totalPages: typeof response.total_pages === 'number' ? response.total_pages : 0,
+      totalResults: typeof response.total_results === 'number' ? response.total_results : 0,
+    };
+  }, []);
+
+  const fetchMovies = useCallback(
+    async (p = 1) => {
+      const targetPage = validatePage(p);
+      const thisRequest = ++requestRef.current;
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchPopularMovies(targetPage);
+
+        // Ignorar respostas antigas (condições de corrida)
+        if (thisRequest !== requestRef.current) return;
+
+        const validatedData = validateResponse(response);
+
+        setResults(validatedData.results);
+        setTotalPages(validatedData.totalPages);
+        setTotalResults(validatedData.totalResults);
+        setPage(targetPage); // Usar a página solicitada, não a retornada pela API
+      } catch (err) {
+        // Ignorar erros de requests antigos
+        if (thisRequest !== requestRef.current) return;
+
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro desconhecido ao carregar filmes';
+        setError(new Error(errorMessage));
+      } finally {
+        // Só atualizar loading se for o request atual
+        if (thisRequest === requestRef.current) {
+          setLoading(false);
+        }
+      }
     },
-    [fetchMovies]
+    [validatePage, validateResponse]
   );
 
-  const nextPage = useCallback(() => goToPage(page + 1), [goToPage, page]);
-  const prevPage = useCallback(() => goToPage(page - 1), [goToPage, page]);
+  const goToPage = useCallback(
+    (targetPage) => {
+      const validatedPage = validatePage(targetPage);
+      if (validatedPage !== page) {
+        fetchMovies(validatedPage);
+      }
+    },
+    [fetchMovies, validatePage, page]
+  );
+
+  const nextPage = useCallback(() => {
+    if (page < totalPages && !loading) {
+      goToPage(page + 1);
+    }
+  }, [goToPage, page, totalPages, loading]);
+
+  const prevPage = useCallback(() => {
+    if (page > 1 && !loading) {
+      goToPage(page - 1);
+    }
+  }, [goToPage, page, loading]);
 
   const reset = useCallback(() => {
     requestRef.current++;
@@ -58,9 +149,6 @@ export default function usePopularMovies(initialPage = 1) {
 
   return {
     page,
-    setPage: goToPage,
-    nextPage,
-    prevPage,
     results,
     totalPages,
     totalResults,
@@ -68,5 +156,18 @@ export default function usePopularMovies(initialPage = 1) {
     error,
     reset,
     fetchMovies,
+    goToPage,
+    nextPage,
+    prevPage,
+
+    // Estados computados para UX
+    hasResults,
+    canGoNext,
+    canGoPrev,
+    hasError,
+    isEmpty,
+
+    // Alias para compatibilidade
+    setPage: goToPage,
   };
 }

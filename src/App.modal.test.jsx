@@ -46,7 +46,7 @@ describe('App modal flow', () => {
   it('abre modal ao clicar em Detalhes e mostra conteudo', async () => {
     const user = userEvent.setup();
     render(
-      <MemoryRouter initialEntries={["/"]}>
+      <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );

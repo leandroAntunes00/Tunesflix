@@ -9,9 +9,9 @@
   line-height: 1.2;
 }
 
-.tf-home-header p.tf-popular-subtitle {
+.tf-home-header__subtitle {
   margin: 6px 0 0;
-  color: var(--tf-muted);
+  color: var(--muted);
   font-size: 0.95rem;
 }
 

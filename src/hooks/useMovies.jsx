@@ -1,10 +1,49 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import usePopularMovies from './usePopularMovies';
 import useTopRatedMovies from './useTopRatedMovies';
 import useNowPlayingMovies from './useNowPlayingMovies';
 import useMovieSearch from './useMovieSearch';
 
-// Hook principal que gerencia todas as categorias e buscas
+/**
+ * Hook principal para gerenciamento unificado de filmes
+ *
+ * Este hook orquestra múltiplas fontes de dados de filmes, permitindo:
+ * - Navegação entre categorias (popular, top-rated, now-playing)
+ * - Busca de filmes por texto
+ * - Gerenciamento unificado do estado de loading e erro
+ *
+ * @param {string} initialCategory - Categoria inicial ('popular', 'top-rated', 'now-playing')
+ * @returns {Object} Estado e ações do hook
+ *
+ * @example
+ * ```jsx
+ * const {
+ *   category,
+ *   searchQuery,
+ *   isSearching,
+ *   results,
+ *   loading,
+ *   error,
+ *   hasResults,
+ *   canLoadMore,
+ *   changeCategory,
+ *   search,
+ *   loadMore,
+ *   reset
+ * } = useMovies('popular');
+ *
+ * // Mudar categoria
+ * changeCategory('top-rated');
+ *
+ * // Buscar filmes
+ * search('Batman');
+ *
+ * // Carregar mais resultados
+ * if (canLoadMore) {
+ *   loadMore();
+ * }
+ * ```
+ */
 export default function useMovies(initialCategory = 'popular') {
   const [category, setCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,6 +53,48 @@ export default function useMovies(initialCategory = 'popular') {
   const topRated = useTopRatedMovies();
   const nowPlaying = useNowPlayingMovies();
   const search = useMovieSearch();
+
+  // Estados computados memoizados
+  const isSearching = useMemo(() => Boolean(searchQuery), [searchQuery]);
+
+  // Função para obter o hook ativo baseado na categoria
+  const getActiveHook = useCallback(() => {
+    switch (category) {
+      case 'top-rated':
+        return topRated;
+      case 'now-playing':
+        return nowPlaying;
+      case 'popular':
+      default:
+        return popular;
+    }
+  }, [category, popular, topRated, nowPlaying]);
+
+  // Hook ativo baseado no estado de busca
+  const activeHook = useMemo(() => {
+    return isSearching ? search : getActiveHook();
+  }, [isSearching, search, getActiveHook]);
+
+  // Estados computados para UX
+  const hasResults = useMemo(() => {
+    return activeHook.results && activeHook.results.length > 0;
+  }, [activeHook.results]);
+
+  const canLoadMore = useMemo(() => {
+    return activeHook.page < activeHook.totalPages && !activeHook.loading;
+  }, [activeHook.page, activeHook.totalPages, activeHook.loading]);
+
+  const hasError = useMemo(() => {
+    return Boolean(activeHook.error);
+  }, [activeHook.error]);
+
+  const isLoading = useMemo(() => {
+    return activeHook.loading;
+  }, [activeHook.loading]);
+
+  const isEmpty = useMemo(() => {
+    return !isLoading && !hasError && !hasResults;
+  }, [isLoading, hasError, hasResults]);
 
   // Carrega a categoria ativa na montagem inicial (evita lista vazia ao abrir a Home)
   useEffect(() => {
@@ -32,37 +113,39 @@ export default function useMovies(initialCategory = 'popular') {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Função para obter o hook ativo baseado na categoria
-  const getActiveHook = useCallback(() => {
-    switch (category) {
-      case 'top-rated':
-        return topRated;
-      case 'now-playing':
-        return nowPlaying;
-      case 'popular':
-      default:
-        return popular;
-    }
-  }, [category, popular, topRated, nowPlaying]);
-
-  // Quando há busca ativa, usar o hook de busca
-  const activeHook = searchQuery ? search : getActiveHook();
+  // Validação de query de busca
+  const isValidSearchQuery = useCallback((query) => {
+    return typeof query === 'string' && query.trim().length > 0;
+  }, []);
 
   // Função para mudar categoria
   const changeCategory = useCallback(
     (newCategory) => {
+      // Validação simples de categoria
+      if (!['popular', 'top-rated', 'now-playing'].includes(newCategory)) {
+        console.warn(`Categoria inválida: ${newCategory}. Usando 'popular' como fallback.`);
+        newCategory = 'popular';
+      }
+
       setCategory(newCategory);
       setSearchQuery('');
+
       // Resetar a busca quando mudar categoria
-      search.reset();
-      // Carregar a nova categoria
+      if (search.reset) {
+        search.reset();
+      }
+
+      // Carregar a nova categoria usando a categoria passada diretamente
       const hook =
         newCategory === 'top-rated'
           ? topRated
           : newCategory === 'now-playing'
             ? nowPlaying
             : popular;
-      hook.fetchMovies(1);
+
+      if (hook && typeof hook.fetchMovies === 'function') {
+        hook.fetchMovies(1);
+      }
     },
     [search, topRated, nowPlaying, popular]
   );
@@ -70,40 +153,70 @@ export default function useMovies(initialCategory = 'popular') {
   // Função para buscar
   const handleSearch = useCallback(
     (query) => {
-      setSearchQuery(query);
-      if (query && query.trim()) {
-        search.search(query, 1);
-      } else {
+      if (!isValidSearchQuery(query)) {
+        // Se query vazia, voltar para categoria atual
         setSearchQuery('');
-        // Voltar para a categoria atual
-        getActiveHook().fetchMovies(1);
+        const hook = getActiveHook();
+        if (hook && typeof hook.fetchMovies === 'function') {
+          hook.fetchMovies(1);
+        }
+        return;
+      }
+
+      setSearchQuery(query.trim());
+      if (search.search) {
+        search.search(query.trim(), 1);
       }
     },
-    [search, getActiveHook]
+    [search, getActiveHook, isValidSearchQuery]
   );
+
+  // Função para carregar mais resultados
+  const loadMore = useCallback(() => {
+    if (!canLoadMore) return;
+
+    const hook = activeHook;
+    if (isSearching && hook.search) {
+      // Se está buscando, usar search com próxima página
+      hook.search(searchQuery, hook.page + 1);
+    } else if (hook.fetchMovies) {
+      // Se é categoria, usar fetchMovies com próxima página
+      hook.fetchMovies(hook.page + 1);
+    }
+  }, [canLoadMore, activeHook, isSearching, searchQuery]);
 
   // Função para resetar tudo
   const reset = useCallback(() => {
     setSearchQuery('');
     setCategory('popular');
-    search.reset();
-    popular.reset();
-    topRated.reset();
-    nowPlaying.reset();
+
+    // Resetar todos os hooks
+    if (search.reset) search.reset();
+    if (popular.reset) popular.reset();
+    if (topRated.reset) topRated.reset();
+    if (nowPlaying.reset) nowPlaying.reset();
   }, [search, popular, topRated, nowPlaying]);
 
   return {
     // Estado atual
     category,
     searchQuery,
-    isSearching: Boolean(searchQuery),
+    isSearching,
 
-    // Dados do hook ativo
+    // Estados computados para UX
+    hasResults,
+    canLoadMore,
+    hasError,
+    isLoading,
+    isEmpty,
+
+    // Dados do hook ativo (spread para manter compatibilidade)
     ...activeHook,
 
     // Ações
     changeCategory,
     search: handleSearch,
+    loadMore,
     reset,
 
     // Acesso direto aos hooks (para casos especiais)

@@ -1,19 +1,37 @@
 import React from 'react';
-import { test, expect, vi } from 'vitest';
+import { test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import Header from './Header';
 import { MemoryRouter } from 'react-router-dom';
 
-test('Header navegação chama onNavigate', async () => {
-  const user = userEvent.setup();
-  const onNavigate = vi.fn();
+test('Header renderiza corretamente com navegação', () => {
   render(
-    <MemoryRouter initialEntries={["/"]}>
-      <Header onNavigate={onNavigate} active="home" />
+    <MemoryRouter initialEntries={['/']}>
+      <Header />
     </MemoryRouter>
   );
 
-  await user.click(screen.getByRole('link', { name: /Favoritos/i }));
-  expect(onNavigate).toHaveBeenCalledWith('favorites');
+  // Verifica se o logo e nome estão presentes
+  expect(screen.getByAltText('Tunesflix')).toBeInTheDocument();
+  expect(screen.getByText('Tunesflix')).toBeInTheDocument();
+
+  // Verifica se os links de navegação estão presentes
+  expect(screen.getByRole('link', { name: /Início/i })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Favoritos/i })).toBeInTheDocument();
+});
+
+test('Header links têm href corretos', () => {
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <Header />
+    </MemoryRouter>
+  );
+
+  // Verifica se os links têm os hrefs corretos
+  expect(screen.getByRole('link', { name: /Ir para página inicial/i })).toHaveAttribute(
+    'href',
+    '/'
+  );
+  expect(screen.getByRole('link', { name: /Início/i })).toHaveAttribute('href', '/');
+  expect(screen.getByRole('link', { name: /Favoritos/i })).toHaveAttribute('href', '/favorites');
 });

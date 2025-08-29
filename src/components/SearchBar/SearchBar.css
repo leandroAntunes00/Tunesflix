@@ -72,27 +72,3 @@
   height: 1px;
   overflow: hidden;
 }
-
-/* shimmer for skeletons */
-.tf-skeleton {
-  position: relative;
-  overflow: hidden;
-}
-.tf-skeleton::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -150%;
-  height: 100%;
-  width: 150%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-  animation: shimmer 1.2s infinite;
-}
-@keyframes shimmer {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}

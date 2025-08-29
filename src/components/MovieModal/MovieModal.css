@@ -1,3 +1,6 @@
+/* MovieModal.css - Estilos para o modal de detalhes do filme */
+
+/* Backdrop com efeito de blur para destacar o modal */
 .tf-modal__backdrop {
   position: fixed;
   inset: 0;
@@ -5,31 +8,39 @@
   align-items: center;
   justify-content: center;
   z-index: 60;
-  /* subtle blur & glass effect to make modal feel elevated */
+  /* Efeito de vidro sutil para dar profundidade */
   background: rgba(2, 6, 23, 0.45);
   backdrop-filter: blur(6px) saturate(120%);
 }
+
+/* Container principal do modal */
 .tf-modal {
   background: #0f1113;
-  color: #f5f5f5; /* garantir texto claro */
+  color: #f5f5f5;
   border-radius: 10px;
   max-width: 880px;
   width: 94%;
   padding: 1rem;
-  max-height: 80vh; /* limita altura do modal para não vazar da viewport */
+  max-height: 80vh;
   position: relative;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  /* Estado inicial: ligeiramente reduzido e transparente */
   transform-origin: center center;
   transform: translateY(8px) scale(0.992);
   opacity: 0;
-}
-.tf-modal.is-open {
-  transform: translateY(0) scale(1);
-  opacity: 1;
+  /* Transições suaves */
   transition:
     transform 260ms cubic-bezier(0.2, 0.9, 0.2, 1),
     opacity 220ms ease;
 }
+
+/* Estado ativo do modal */
+.tf-modal.is-open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Botão de fechar */
 .tf-modal__close {
   position: absolute;
   right: 8px;
@@ -42,64 +53,199 @@
   padding: 6px 10px;
   border-radius: 6px;
   z-index: 12;
+  /* Hover e focus states para melhor acessibilidade */
+  transition: background-color 0.2s ease;
 }
+
+.tf-modal__close:hover,
+.tf-modal__close:focus {
+  background: rgba(255, 255, 255, 0.08);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Header do modal */
 .tf-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  /* garantir que meta nao colid a com o botao fechar */
-  padding-right: 48px; /* distancia extra para o canto direito */
+  /* Espaço extra para não colidir com o botão fechar */
+  padding-right: 48px;
 }
+
+.tf-modal__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tf-modal__tagline {
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+  color: #cfcfcf;
+  font-size: 0.9rem;
+}
+
+/* Metadados do filme */
 .tf-modal__meta {
   color: #cfcfcf;
   font-size: 0.95rem;
   margin-left: 0.6rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
+
+/* Corpo principal do modal */
 .tf-modal__body {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
-  overflow: auto; /* permite scroll interno se o conteúdo for grande */
-  padding-right: 6px; /* espaço para o scroll */
+  overflow: auto;
+  padding-right: 6px;
 }
+
+/* Poster do filme */
 .tf-modal__poster img {
   width: 220px;
   border-radius: 8px;
   object-fit: cover;
+  /* Sombra sutil para destacar a imagem */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+.tf-modal__placeholder {
+  width: 220px;
+  height: 330px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cfcfcf;
+  font-size: 0.9rem;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Informações do filme */
 .tf-modal__info {
   flex: 1;
   color: #eaeaea;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
+
 .tf-modal__overview {
   color: #e1e1e1;
-  margin-bottom: 0.75rem;
+  margin: 0;
+  line-height: 1.6;
+  /* Limita o texto a 6 linhas com ellipsis */
   display: -webkit-box;
-  -webkit-line-clamp: 6; /* limita linhas visiveis */
+  -webkit-line-clamp: 6;
   line-clamp: 6;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
 }
+
+/* Estilos para elementos fortes e spans */
+.tf-modal__info strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.tf-modal__info span {
+  color: #e1e1e1;
+}
+
+/* Estados de loading e erro */
 .tf-modal__loading,
 .tf-modal__error {
   padding: 1rem;
   color: #fff;
+  text-align: center;
+  border-radius: 6px;
 }
 
-/* labels and strong text */
-.tf-modal__info strong {
-  color: #fff;
+.tf-modal__loading {
+  background: rgba(255, 255, 255, 0.05);
 }
 
+.tf-modal__error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Classe utilitária para texto apenas para leitores de tela */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsividade */
 @media (max-width: 720px) {
+  .tf-modal {
+    width: 96%;
+    padding: 0.75rem;
+    max-height: 90vh;
+  }
+
   .tf-modal__body {
     flex-direction: column;
     align-items: center;
+    gap: 1.5rem;
   }
-  .tf-modal__poster img {
+
+  .tf-modal__poster img,
+  .tf-modal__placeholder {
     width: 160px;
+    height: 240px;
+  }
+
+  .tf-modal__title {
+    font-size: 1.25rem;
+  }
+
+  .tf-modal__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-right: 40px;
+  }
+
+  .tf-modal__meta {
+    margin-left: 0;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tf-modal {
+    width: 98%;
+    padding: 0.5rem;
+  }
+
+  .tf-modal__poster img,
+  .tf-modal__placeholder {
+    width: 140px;
+    height: 210px;
+  }
+
+  .tf-modal__close {
+    right: 4px;
+    top: 4px;
+    font-size: 1.2rem;
+    padding: 4px 8px;
   }
 }

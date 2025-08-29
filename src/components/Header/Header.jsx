@@ -3,37 +3,45 @@ import './Header.css';
 import logo from '../../assets/react.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-export default function Header({ onNavigate = () => {} }) {
+/**
+ * Componente Header - Navegação principal da aplicação
+ * Responsável por exibir o logo, nome do site e links de navegação
+ */
+export default function Header() {
   const navigate = useNavigate();
 
-  const goHome = (e) => {
+  // Função para navegar para a página inicial
+  const handleHomeNavigation = (e) => {
     e.preventDefault();
-    // navigate using react-router so it's SPA navigation
     navigate('/');
-    // also call the external handler for compatibility
-    if (onNavigate) onNavigate('home');
   };
 
   return (
     <header className="tf-header">
       <div className="tf-header__inner">
-        <a className="tf-brand" href="/" aria-label="Ir para início" onClick={goHome}>
+        {/* Link do brand - leva para a página inicial */}
+        <a
+          className="tf-brand"
+          href="/"
+          aria-label="Ir para página inicial"
+          onClick={handleHomeNavigation}
+        >
           <img src={logo} alt="Tunesflix" className="tf-brand__logo" />
           <span className="tf-brand__name">Tunesflix</span>
         </a>
-        <nav className="tf-nav" aria-label="Main navigation">
+
+        {/* Navegação principal */}
+        <nav className="tf-nav" aria-label="Navegação principal">
           <NavLink
             to="/"
             end
             className={({ isActive }) => `tf-nav__link ${isActive ? 'is-active' : ''}`}
-            onClick={() => onNavigate('home')}
           >
             Início
           </NavLink>
           <NavLink
             to="/favorites"
             className={({ isActive }) => `tf-nav__link ${isActive ? 'is-active' : ''}`}
-            onClick={() => onNavigate('favorites')}
           >
             Favoritos
           </NavLink>

@@ -5,32 +5,14 @@ import './App.css';
 import FavoritesView from './components/Favorites/FavoritesView';
 import HomePage from './pages/HomePage';
 import MovieDetailPage from './pages/MovieDetailPage';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useFavorites } from './hooks/useFavorites';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 function App() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // obtain favorites-related actions from the hook
-  const { reset, changeCategory } = useFavorites();
-
-  const handleNavigate = (v) => {
-    if (v === 'home') {
-      reset();
-      changeCategory('popular');
-      navigate('/');
-    } else if (v === 'favorites') {
-      navigate('/favorites');
-    }
-  };
-
-  // derive active tab from current location
-  const active = location.pathname.startsWith('/favorites') ? 'favorites' : 'home';
 
   return (
     <>
-      <Header onNavigate={handleNavigate} active={active} />
+      <Header />
 
       <main className="tf-main">
         <Routes>

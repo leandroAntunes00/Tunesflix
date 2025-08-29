@@ -1,15 +1,19 @@
 import React from 'react';
 import './CardList.css';
 
+/**
+ * Componente SkeletonCard - Placeholder animado para loading
+ * Simula a estrutura do CardFilm durante o carregamento
+ */
 export default function SkeletonCard() {
   return (
     <article className="tf-card tf-card--skeleton" aria-hidden>
-      <div className="tf-card__media">
+      <figure className="tf-card__figure">
         <div className="tf-card__poster tf-skeleton" />
-      </div>
+      </figure>
       <div className="tf-card__body">
-        <h3 className="tf-card__title tf-skeleton short" />
-        <p className="tf-card__meta tf-skeleton short" />
+        <h3 className="tf-card__title tf-skeleton" />
+        <p className="tf-card__meta tf-skeleton" />
         <div className="tf-card__actions">
           <span className="tf-btn tf-skeleton small" />
           <span className="tf-btn tf-skeleton small" />

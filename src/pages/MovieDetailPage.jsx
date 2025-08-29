@@ -64,7 +64,9 @@ export default function MovieDetailPage({ film: filmProp, onBack }) {
           <div
             className="tf-detail__hero"
             style={{
-              backgroundImage: details.backdrop_path ? `url(${backdropImage(details.backdrop_path)})` : 'none',
+              backgroundImage: details.backdrop_path
+                ? `url(${backdropImage(details.backdrop_path)})`
+                : 'none',
             }}
           >
             <div className="tf-detail__hero-inner">
@@ -89,15 +91,24 @@ export default function MovieDetailPage({ film: filmProp, onBack }) {
                   <h3>Elenco</h3>
                   <ul className="tf-cast">
                     {details.credits.cast.slice(0, 8).map((c) => (
-                      <li key={c.cast_id || c.credit_id}>{c.name} — {c.character}</li>
+                      <li key={c.cast_id || c.credit_id}>
+                        {c.name} — {c.character}
+                      </li>
                     ))}
                   </ul>
                 </section>
               )}
 
-              <p><strong>Gêneros:</strong> {details.genres?.map(g => g.name).join(', ')}</p>
-              <p><strong>Duração:</strong> {details.runtime ? details.runtime + ' min' : '—'}</p>
-              <p><strong>Avaliação:</strong> {details.vote_average ? `${details.vote_average} / 10` : '—'}</p>
+              <p>
+                <strong>Gêneros:</strong> {details.genres?.map((g) => g.name).join(', ')}
+              </p>
+              <p>
+                <strong>Duração:</strong> {details.runtime ? details.runtime + ' min' : '—'}
+              </p>
+              <p>
+                <strong>Avaliação:</strong>{' '}
+                {details.vote_average ? `${details.vote_average} / 10` : '—'}
+              </p>
             </div>
           </div>
         </article>
