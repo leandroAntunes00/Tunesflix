@@ -64,3 +64,30 @@ O projeto utiliza uma arquitetura modular com hooks especializados:
 - `npm run build` - Build para produção
 - `npm run preview` - Preview do build
 - `npm run test` - Executa os testes
+
+## Backend API
+
+Este projeto frontend se conecta a uma API backend dedicada que fornece os dados dos filmes.
+
+### 📡 **Servidor Backend**
+**Repositório:** [server-tunesflix](https://github.com/leandroAntunes00/server-tunesflix)
+
+O backend é responsável por:
+- ✅ Consumir a API oficial do TMDB
+- ✅ Processar e otimizar as respostas
+- ✅ Implementar cache inteligente
+- ✅ Fornecer endpoints REST padronizados
+- ✅ Gerenciar rate limiting e autenticação
+
+### 🔗 **Endpoints Utilizados**
+- `GET /api/movies/search` - Busca de filmes
+- `GET /api/movies/popular` - Filmes populares
+- `GET /api/movies/top-rated` - Filmes mais avaliados
+- `GET /api/movies/now-playing` - Filmes em cartaz
+- `GET /api/movies/{id}` - Detalhes do filme
+
+### 🚀 **Configuração da API**
+Configure a URL do backend no arquivo `.env`:
+```env
+VITE_API=http://localhost:3000
+```
