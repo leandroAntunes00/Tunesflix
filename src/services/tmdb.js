@@ -1,16 +1,3 @@
-/**
- * @fileoverview TMDB API Service
- *
- * Serviço profissional para integração com a API do The Movie Database (TMDB).
- * Fornece funcionalidades completas de busca, listagem e detalhes de filmes
- * com cache inteligente, retry automático, validação robusta e tratamento
- * de erros abrangente.
- *
- * @author Tunesflix Team
- * @version 2.0.0
- * @since 2024
- */
-
 import { createConfig } from '../utils/config';
 
 /**

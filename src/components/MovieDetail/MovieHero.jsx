@@ -2,17 +2,6 @@ import React from 'react';
 import { backdropImage } from '../../services/tmdb';
 import './MovieHero.css';
 
-/**
- * Componente MovieHero - Seção hero do filme com backdrop
- *
- * Exibe o título do filme sobre uma imagem de fundo (backdrop).
- * Responsável apenas pela apresentação visual do hero.
- *
- * @param {Object} movie - Dados do filme
- * @param {string} movie.title - Título do filme
- * @param {string} movie.name - Nome alternativo do filme
- * @param {string} movie.backdrop_path - Caminho da imagem de fundo
- */
 export default function MovieHero({ movie }) {
   if (!movie) return null;
 

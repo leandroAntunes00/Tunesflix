@@ -1,10 +1,3 @@
-/**
- * Componentes para a página de detalhes do filme
- *
- * Este diretório contém componentes especializados para exibir
- * diferentes seções da página de detalhes do filme.
- */
-
 // Componentes principais
 export { default as MovieHero } from './MovieHero';
 export { default as MoviePoster } from './MoviePoster';

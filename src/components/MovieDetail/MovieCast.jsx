@@ -1,15 +1,6 @@
 import React from 'react';
 import './MovieCast.css';
 
-/**
- * Componente MovieCast - Lista de elenco do filme
- *
- * Exibe os primeiros membros do elenco com seus personagens.
- * Limita a 8 membros para não sobrecarregar a interface.
- *
- * @param {Object} credits - Créditos do filme
- * @param {Array} credits.cast - Array de membros do elenco
- */
 export default function MovieCast({ credits }) {
   if (!credits?.cast || credits.cast.length === 0) {
     return null;

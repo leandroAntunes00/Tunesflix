@@ -2,16 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import './MovieModal.css';
 import { posterImage } from '../../services/tmdb';
 
-/**
- * Componente MovieModal - Modal para exibir detalhes completos de um filme
- * Modal acessível com suporte a teclado, focus trap e navegação por leitores de tela
- *
- * @param {boolean} open - Controla se o modal está aberto
- * @param {Function} onClose - Callback chamado quando o modal deve ser fechado
- * @param {boolean} loading - Indica se os dados estão sendo carregados
- * @param {Object} details - Dados detalhados do filme
- * @param {Error} error - Objeto de erro caso ocorra falha no carregamento
- */
 export default function MovieModal({ open, onClose, loading, details, error }) {
   const modalRef = useRef(null);
   const closeButtonRef = useRef(null);

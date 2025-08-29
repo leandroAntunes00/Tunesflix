@@ -3,17 +3,6 @@ import CardFilm from '../CardFilm/CardFilm';
 import SkeletonCard from './SkeletonCard';
 import './CardList.css';
 
-/**
- * Componente CardList - Lista de cards de filmes/séries
- * Responsável por renderizar uma grade de cards com suporte a loading e estados vazios
- *
- * @param {Array} items - Array de objetos de filmes/séries
- * @param {Function} onDetails - Callback para abrir detalhes de um item
- * @param {Function} onToggleFavorite - Callback para alternar favorito
- * @param {Set|Object} favorites - Conjunto ou objeto com IDs dos favoritos
- * @param {boolean} loading - Se está carregando dados
- * @param {Function} onNavigate - Callback para navegação (opcional)
- */
 export default function CardList({
   items = [],
   onDetails,

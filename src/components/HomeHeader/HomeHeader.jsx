@@ -1,13 +1,6 @@
 import React from 'react';
 import './HomeHeader.css';
 
-/**
- * Componente HomeHeader - Cabeçalho da página inicial
- * Exibe título e subtítulo baseado na categoria atual ou nos resultados de busca
- *
- * @param {string} query - Termo de busca (opcional)
- * @param {string} category - Categoria atual (popular, top-rated, now-playing)
- */
 export default function HomeHeader({ query, category = 'popular' }) {
   // Verifica se há uma query de busca
   const hasQuery = query && query.trim();

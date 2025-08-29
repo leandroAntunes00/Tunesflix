@@ -1,47 +1,6 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * MELHOR PRÁTICA MODERNA (2025):
- *
- * Para projetos TypeScript, este hook seria:
- *
- * interface ViewStateParams<T> {
- *   items: T[];
- *   loading: boolean;
- *   error?: Error | null;
- *   query?: string;
- * }
- *
- * interface ViewStateResult {
- *   type: 'loading' | 'error' | 'empty' | 'data';
- *   hasItems: boolean;
- *   isLoading: boolean;
- *   isEmpty: boolean;
- *   shouldShowHeader: boolean;
- *   shouldShowPagination: boolean;
- *   error?: Error;
- *   items?: T[];
- * }
- *
- * VANTAGENS DO TYPESCRIPT:
- * ✅ Type safety para estados
- * ✅ IntelliSense para propriedades
- * ✅ Prevenção de typos em runtime
- * ✅ Refatoração automática
- *
- * Hook personalizado para determinar o estado atual da view
- *
- * Centraliza a lógica de estados da interface, facilitando
- * a tomada de decisões sobre o que renderizar.
- *
- * @param {Object} params
- * @param {Array} params.items - Lista de itens
- * @param {boolean} params.loading - Estado de carregamento
- * @param {Error} [params.error] - Erro ocorrido
- * @param {string} [params.query] - Query de busca (opcional)
- * @returns {Object} Estado da view
- */
 export function useViewState({ items, loading, error, query }) {
   return useMemo(() => {
     // Estado de erro
@@ -107,10 +66,13 @@ export function useViewState({ items, loading, error, query }) {
  * @returns {Object} Handlers de ação
  */
 export function useViewActions({ onRetry, onNavigate }) {
-  return useMemo(() => ({
-    handleRetry: onRetry || (() => {}),
-    handleNavigate: onNavigate || (() => {}),
-  }), [onRetry, onNavigate]);
+  return useMemo(
+    () => ({
+      handleRetry: onRetry || (() => {}),
+      handleNavigate: onNavigate || (() => {}),
+    }),
+    [onRetry, onNavigate]
+  );
 }
 
 /**

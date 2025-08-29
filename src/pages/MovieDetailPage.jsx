@@ -11,16 +11,6 @@ import {
   Error,
 } from '../components/MovieDetail';
 
-/**
- * Hook personalizado para gerenciar o estado de carregamento dos detalhes do filme
- *
- * Centraliza a lógica de carregamento, cache e tratamento de erros
- * para os detalhes do filme.
- *
- * @param {string|number} id - ID do filme
- * @param {Object} initialFilm - Dados iniciais do filme (se disponíveis)
- * @returns {Object} Estado do carregamento
- */
 function useMovieDetailsState(id, initialFilm) {
   const [details, setDetails] = useState(initialFilm || null);
   const [loading, setLoading] = useState(!initialFilm);
@@ -74,25 +64,6 @@ function useMovieDetailsState(id, initialFilm) {
   return { details, loading, error };
 }
 
-/**
- * Página MovieDetailPage - Detalhes completos de um filme
- *
- * Responsável por:
- * - Coordenar o carregamento dos detalhes do filme
- * - Montar os componentes visuais
- * - Gerenciar navegação
- * - Tratamento de estados (loading, error, success)
- *
- * Princípios de design:
- * - Separação clara de responsabilidades
- * - Composição de componentes especializados
- * - Estado gerenciado por hooks customizados
- * - Interface limpa e focada na montagem
- *
- * @param {Object} props
- * @param {Object} [props.film] - Dados iniciais do filme
- * @param {Function} [props.onBack] - Handler opcional para navegação de volta
- */
 export default function MovieDetailPage({ film: filmProp, onBack }) {
   const params = useParams();
   const location = useLocation();

@@ -1,40 +1,6 @@
 import { useState, useCallback } from 'react';
 import { getMovieDetails, withTimeout } from '../services/tmdb';
 
-/**
- * Hook personalizado para gerenciar o modal de detalhes do filme
- *
- * Centraliza toda a lógica relacionada ao modal de detalhes em um lugar reutilizável.
- * Fornece estado consistente e tratamento robusto de erros para carregamento de detalhes.
- *
- * @returns {Object} Estado e funções do modal
- * @returns {boolean} return.open - Se o modal está aberto
- * @returns {boolean} return.loading - Se está carregando dados
- * @returns {Object|null} return.details - Detalhes do filme carregado
- * @returns {Error|null} return.error - Erro ocorrido durante o carregamento
- * @returns {Function} return.openModal - Função para abrir o modal e carregar detalhes
- * @returns {Function} return.closeModal - Função para fechar o modal e limpar estado
- *
- * @example
- * ```jsx
- * function MovieCard({ movie }) {
- *   const { open, loading, details, error, openModal, closeModal } = useMovieDetailsModal();
- *
- *   return (
- *     <>
- *       <button onClick={() => openModal(movie)}>Ver detalhes</button>
- *       <MovieModal
- *         open={open}
- *         onClose={closeModal}
- *         loading={loading}
- *         details={details}
- *         error={error}
- *       />
- *     </>
- *   );
- * }
- * ```
- */
 export function useMovieDetailsModal() {
   const [modalState, setModalState] = useState({
     open: false,

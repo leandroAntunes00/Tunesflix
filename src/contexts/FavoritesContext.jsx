@@ -7,24 +7,6 @@ import {
   normalizeFavoriteFilm,
 } from './favoritesCore';
 
-/**
- * Provider para gerenciamento de filmes favoritos
- *
- * Fornece funcionalidades completas para adicionar, remover e gerenciar
- * filmes favoritos com persistência no localStorage, validação de dados
- * e estados computados para melhor experiência do usuário.
- *
- * @param {Object} props - Props do componente
- * @param {React.ReactNode} props.children - Componentes filhos
- * @returns {JSX.Element} Provider com contexto de favoritos
- *
- * @example
- * ```jsx
- * <FavoritesProvider>
- *   <App />
- * </FavoritesProvider>
- * ```
- */
 export function FavoritesProvider({ children }) {
   const [favorites, setFavorites] = useState(() => {
     // Carrega favoritos apenas no cliente

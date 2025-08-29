@@ -1,13 +1,3 @@
-/**
- * Constantes da aplicação - Centralizando valores para evitar manipulação de prototype
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - Centralização de constantes para evitar duplicação
- * - Prevenção de manipulação de prototype
- * - Facilita manutenção e refatoração
- * - Type safety melhorado
- */
-
 // Categorias de filmes
 export const MOVIE_CATEGORIES = {
   POPULAR: 'popular',

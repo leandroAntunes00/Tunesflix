@@ -1,16 +1,6 @@
 import React from 'react';
 import './Error.css';
 
-/**
- * Componente Error - Exibição de erros
- *
- * Exibe mensagens de erro de forma consistente e acessível.
- * Pode incluir ações de retry quando apropriado.
- *
- * @param {Error|string} error - Erro a ser exibido
- * @param {Function} onRetry - Função opcional para tentar novamente
- * @param {string} title - Título opcional do erro
- */
 export default function Error({ error, onRetry, title = 'Erro' }) {
   const errorMessage = error instanceof Error ? error.message : String(error);
 

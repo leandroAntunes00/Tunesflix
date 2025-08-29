@@ -1,10 +1,3 @@
-/**
- * Índice de hooks customizados da aplicação
- *
- * Centraliza todas as exportações de hooks para facilitar importações
- * e manter consistência na estrutura do projeto.
- */
-
 // Hooks de estado da aplicação
 export { useFavorites } from './useFavorites';
 export { useMovies } from './useMovies';

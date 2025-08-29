@@ -6,24 +6,6 @@ import { useMovieDetailsModal } from '../hooks/useMovieDetailsModal';
 import FavoritesView from '../components/Favorites/FavoritesView';
 import MovieModal from '../components/MovieModal/MovieModal';
 
-/**
- * Página de Favoritos
- *
- * Responsável por:
- * - Exibir a lista de filmes favoritados
- * - Gerenciar ações de favoritos (remover)
- * - Navegação para detalhes dos filmes
- * - Modal de detalhes dos filmes
- *
- * Princípios de design:
- * - Separação clara de responsabilidades
- * - Reutilização de hooks customizados
- * - Navegação consistente
- * - Tratamento adequado de estados vazios
- *
- * @param {Object} props
- * @param {Function} [props.onNavigate] - Handler opcional para navegação externa
- */
 export default function FavoritesPage({ onNavigate }) {
   const { favorites, toggleFavorite } = useFavorites();
   const { navigateToMovie } = useNavigation();

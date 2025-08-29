@@ -7,62 +7,6 @@ import CategorySelector from '../components/CategorySelector/CategorySelector';
 import CardList from '../components/CardList/CardList';
 import Pagination from '../components/Pagination/Pagination';
 
-/**
- * MELHOR PRÁTICA MODERNA - TypeScript Interface (para referência)
- *
- * interface HomeViewProps {
- *   query: string;
- *   search: (query: string) => void;
- *   results: Movie[];
- *   loading: boolean;
- *   error?: Error | null;
- *   page: number;
- *   nextPage: () => void;
- *   prevPage: () => void;
- *   totalPages: number;
- *   favorites: Record<string, Movie>;
- *   onToggleFavorite: (movie: Movie) => void;
- *   onDetails: (movie: Movie) => void;
- *   category: string;
- *   onCategoryChange: (category: string) => void;
- *   onNavigate: (type: string, film: Movie) => void;
- * }
- *
- * VANTAGENS DO TYPESCRIPT:
- * ✅ Validação em tempo de compilação (não runtime)
- * ✅ IntelliSense e autocomplete melhores
- * ✅ Refatoração segura
- * ✅ Menos bugs em produção
- * ✅ Documentação inline com tipos
- */
-
-/**
- * HomeView - View principal da aplicação
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - PropTypes para validação runtime (fallback para JS)
- * - Acessibilidade aprimorada (ARIA labels)
- * - Separação clara de responsabilidades
- * - Componentes menores e mais focados
- * - Documentação JSDoc completa
- *
- * @param {Object} props
- * @param {string} props.query - Query de busca atual
- * @param {Function} props.search - Função para executar busca
- * @param {Array} props.results - Resultados da busca/listagem
- * @param {boolean} props.loading - Estado de carregamento
- * @param {Error} [props.error] - Erro ocorrido
- * @param {number} props.page - Página atual
- * @param {Function} props.nextPage - Função para próxima página
- * @param {Function} props.prevPage - Função para página anterior
- * @param {number} props.totalPages - Total de páginas
- * @param {Object} props.favorites - Objeto com filmes favoritos
- * @param {Function} props.onToggleFavorite - Handler para alternar favorito
- * @param {Function} props.onDetails - Handler para abrir detalhes
- * @param {string} props.category - Categoria selecionada
- * @param {Function} props.onCategoryChange - Handler para mudança de categoria
- * @param {Function} props.onNavigate - Handler para navegação
- */
 export default function HomeView({
   query,
   search,
@@ -84,23 +28,13 @@ export default function HomeView({
     <div className="app-container">
       {/* Seção de busca e filtros - MELHORIA: aria-label para acessibilidade */}
       <section className="tf-search-section" aria-label="Busca e filtros">
-        <CategorySelector
-          value={category}
-          onChange={(value) => onCategoryChange(value)}
-        />
-        <SearchBar
-          defaultValue={query}
-          onSearch={(searchQuery) => search(searchQuery)}
-        />
+        <CategorySelector value={category} onChange={(value) => onCategoryChange(value)} />
+        <SearchBar defaultValue={query} onSearch={(searchQuery) => search(searchQuery)} />
       </section>
 
       {/* Exibição de erros - MELHORIA: role="alert" para acessibilidade */}
       {error && (
-        <div
-          className="tf-error"
-          role="alert"
-          aria-live="polite"
-        >
+        <div className="tf-error" role="alert" aria-live="polite">
           Erro: {error.message}
         </div>
       )}

@@ -1,19 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import './Pagination.css';
 
-/**
- * Componente Pagination - Navegação por páginas com acessibilidade completa
- * Suporta navegação por botões anterior/próximo e números de página
- *
- * @param {number} page - Página atual (1-indexed)
- * @param {number} totalPages - Total de páginas disponíveis
- * @param {Function} onPrev - Callback para página anterior
- * @param {Function} onNext - Callback para próxima página
- * @param {Function} onPageChange - Callback opcional para mudança direta de página
- * @param {string} label - Rótulo opcional para contexto (ex: "Filmes", "Populares")
- * @param {boolean} showPageNumbers - Se deve mostrar números de página (padrão: false)
- * @param {number} maxVisiblePages - Máximo de números de página visíveis (padrão: 5)
- */
 export default function Pagination({
   page,
   totalPages,

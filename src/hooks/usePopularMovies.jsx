@@ -1,29 +1,6 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { fetchPopularMovies } from '../services/tmdb';
 
-/**
- * Hook personalizado para gerenciamento de filmes populares
- *
- * Fornece funcionalidades completas para buscar e navegar por filmes populares,
- * com controle de condições de corrida, paginação inteligente e estados computados
- * para melhor experiência do usuário.
- *
- * @param {number} initialPage - Página inicial para carregamento (padrão: 1)
- * @returns {Object} Estado e funções do hook
- *
- * @example
- * ```jsx
- * const {
- *   results,
- *   loading,
- *   hasResults,
- *   canGoNext,
- *   fetchMovies,
- *   nextPage,
- *   reset
- * } = usePopularMovies(1);
- * ```
- */
 export default function usePopularMovies(initialPage = 1) {
   const [page, setPage] = useState(initialPage);
   const [results, setResults] = useState([]);

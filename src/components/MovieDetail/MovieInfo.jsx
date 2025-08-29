@@ -1,18 +1,6 @@
 import React from 'react';
 import './MovieInfo.css';
 
-/**
- * Componente MovieInfo - Informações detalhadas do filme
- *
- * Exibe sinopse, gêneros, duração e avaliação do filme.
- * Estrutura as informações de forma organizada e acessível.
- *
- * @param {Object} movie - Dados do filme
- * @param {string} movie.overview - Sinopse do filme
- * @param {Array} movie.genres - Array de gêneros
- * @param {number} movie.runtime - Duração em minutos
- * @param {number} movie.vote_average - Avaliação média
- */
 export default function MovieInfo({ movie }) {
   if (!movie) return null;
 

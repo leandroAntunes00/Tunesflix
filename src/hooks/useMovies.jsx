@@ -4,46 +4,6 @@ import useTopRatedMovies from './useTopRatedMovies';
 import useNowPlayingMovies from './useNowPlayingMovies';
 import useMovieSearch from './useMovieSearch';
 
-/**
- * Hook principal para gerenciamento unificado de filmes
- *
- * Este hook orquestra múltiplas fontes de dados de filmes, permitindo:
- * - Navegação entre categorias (popular, top-rated, now-playing)
- * - Busca de filmes por texto
- * - Gerenciamento unificado do estado de loading e erro
- *
- * @param {string} initialCategory - Categoria inicial ('popular', 'top-rated', 'now-playing')
- * @returns {Object} Estado e ações do hook
- *
- * @example
- * ```jsx
- * const {
- *   category,
- *   searchQuery,
- *   isSearching,
- *   results,
- *   loading,
- *   error,
- *   hasResults,
- *   canLoadMore,
- *   changeCategory,
- *   search,
- *   loadMore,
- *   reset
- * } = useMovies('popular');
- *
- * // Mudar categoria
- * changeCategory('top-rated');
- *
- * // Buscar filmes
- * search('Batman');
- *
- * // Carregar mais resultados
- * if (canLoadMore) {
- *   loadMore();
- * }
- * ```
- */
 export default function useMovies(initialCategory = 'popular') {
   const [category, setCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');

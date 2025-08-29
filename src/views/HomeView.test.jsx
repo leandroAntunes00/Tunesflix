@@ -74,7 +74,9 @@ test('HomeView exibe estado vazio quando não há resultados', () => {
 
   // Deve mostrar estado vazio
   expect(screen.getByText('Nenhum filme encontrado')).toBeInTheDocument();
-  expect(screen.getByText('Não há filmes disponíveis na categoria "Populares" no momento.')).toBeInTheDocument();
+  expect(
+    screen.getByText('Não há filmes disponíveis na categoria "Populares" no momento.')
+  ).toBeInTheDocument();
 
   // Não deve mostrar HomeHeader ou paginação
   expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();

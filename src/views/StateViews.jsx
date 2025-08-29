@@ -1,25 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-/**
- * EmptyStateView - Componente para estados vazios
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - Memoização com React.memo para evitar re-renders desnecessários
- * - useCallback para handlers estáveis
- * - Acessibilidade aprimorada com atributos ARIA
- * - Design system consistente
- * - Documentação JSDoc completa
- *
- * Exibe uma mensagem amigável quando não há conteúdo para mostrar,
- * com ícone e ações sugeridas.
- *
- * @param {Object} props
- * @param {string} props.title - Título da mensagem
- * @param {string} props.message - Mensagem descritiva
- * @param {string} [props.icon] - Ícone opcional (emoji ou classe CSS)
- * @param {React.ReactNode} [props.action] - Ação opcional (botão, link)
- */
 const EmptyStateView = memo(({ title, message, icon = '📭', action }) => {
   return (
     <div
@@ -39,11 +20,7 @@ const EmptyStateView = memo(({ title, message, icon = '📭', action }) => {
         </div>
         <h3 className="tf-empty-state__title">{title}</h3>
         <p className="tf-empty-state__message">{message}</p>
-        {action && (
-          <div className="tf-empty-state__action">
-            {action}
-          </div>
-        )}
+        {action && <div className="tf-empty-state__action">{action}</div>}
       </div>
     </div>
   );
@@ -61,23 +38,6 @@ EmptyStateView.defaultProps = {
   action: null,
 };
 
-/**
- * ErrorStateView - Componente para estados de erro
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - Memoização com React.memo para evitar re-renders desnecessários
- * - useCallback para handlers estáveis
- * - Acessibilidade aprimorada com atributos ARIA
- * - Design system consistente
- * - Tratamento robusto de erros
- *
- * Exibe mensagens de erro de forma amigável com opção de retry.
- *
- * @param {Object} props
- * @param {Error} props.error - Objeto de erro
- * @param {Function} [props.onRetry] - Função opcional para tentar novamente
- * @param {string} [props.title] - Título personalizado
- */
 const ErrorStateView = memo(({ error, onRetry, title = 'Ops! Algo deu errado' }) => {
   const errorMessage = error?.message || 'Erro desconhecido';
 
@@ -131,21 +91,6 @@ ErrorStateView.defaultProps = {
   title: 'Ops! Algo deu errado',
 };
 
-/**
- * LoadingStateView - Componente para estados de carregamento
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - Memoização com React.memo para evitar re-renders desnecessários
- * - Acessibilidade aprimorada com atributos ARIA
- * - Design system consistente
- * - Tamanhos configuráveis para diferentes contextos
- *
- * Exibe indicadores de carregamento com mensagens personalizáveis.
- *
- * @param {Object} props
- * @param {string} [props.message] - Mensagem de carregamento
- * @param {string} [props.size] - Tamanho do spinner (small, medium, large)
- */
 const LoadingStateView = memo(({ message = 'Carregando...', size = 'medium' }) => {
   return (
     <div

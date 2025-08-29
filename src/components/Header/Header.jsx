@@ -5,41 +5,17 @@ import { NavLink } from 'react-router-dom';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
 import { ROUTES, ACCESSIBILITY } from '../../config/appConfig';
 
-/**
- * MELHOR PRÁTICA MODERNA (2025) - Header Component
- *
- * MELHORIAS IMPLEMENTADAS:
- * - Memoização com React.memo para evitar re-renders desnecessários
- * - useCallback para handlers estáveis
- * - Hook customizado para navegação consistente
- * - Acessibilidade aprimorada
- * - Constantes centralizadas
- * - Documentação JSDoc completa
- */
-
-/**
- * Header - Componente de navegação principal
- *
- * Responsável por:
- * - Exibir logo e branding da aplicação
- * - Fornecer navegação entre páginas principais
- * - Manter estado ativo dos links
- * - Garantir acessibilidade adequada
- *
- * MELHORIAS IMPLEMENTADAS (2025):
- * - Memoização para otimização de performance
- * - Hook customizado para navegação
- * - Acessibilidade aprimorada
- * - Constantes centralizadas
- */
 const Header = memo(() => {
   const { navigateToHome } = useAppNavigation();
 
   // Handler memoizado para navegação home
-  const handleHomeNavigation = useCallback((e) => {
-    e.preventDefault();
-    navigateToHome();
-  }, [navigateToHome]);
+  const handleHomeNavigation = useCallback(
+    (e) => {
+      e.preventDefault();
+      navigateToHome();
+    },
+    [navigateToHome]
+  );
 
   return (
     <header className="tf-header" role={ACCESSIBILITY.ROLES.BANNER}>
@@ -51,13 +27,7 @@ const Header = memo(() => {
           aria-label="Ir para página inicial - Tunesflix"
           onClick={handleHomeNavigation}
         >
-          <img
-            src={logo}
-            alt="Tunesflix Logo"
-            className="tf-brand__logo"
-            width="32"
-            height="32"
-          />
+          <img src={logo} alt="Tunesflix Logo" className="tf-brand__logo" width="32" height="32" />
           <span className="tf-brand__name">Tunesflix</span>
         </a>
 

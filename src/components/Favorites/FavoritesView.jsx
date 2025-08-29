@@ -5,14 +5,6 @@ import { useFavorites } from '../../hooks/useFavorites';
 import { prefetchMovieDetails } from '../../services/tmdb';
 import './FavoritesView.css';
 
-/**
- * Componente FavoritesView - Visualização da lista de filmes favoritos
- * Exibe os filmes favoritados pelo usuário com opção de remover e ver detalhes
- *
- * @param {Object} favorites - Objeto com filmes favoritos (opcional, usa contexto se não fornecido)
- * @param {Function} onToggleFavorite - Callback para alternar favorito (opcional)
- * @param {Function} onDetails - Callback para ver detalhes (opcional)
- */
 export default function FavoritesView({ favorites: favProp, onToggleFavorite, onDetails }) {
   const navigate = useNavigate();
   const favoritesContext = useFavorites();

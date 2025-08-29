@@ -2,15 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { tmdbImage } from '../../services/tmdb';
 import './CardFilm.css';
 
-/**
- * Componente CardFilm - Exibe informações de um filme/série em formato de cartão
- *
- * @param {Object} film - Objeto com dados do filme/série
- * @param {Function} onDetails - Callback para abrir detalhes
- * @param {Function} onToggleFavorite - Callback para alternar favorito
- * @param {boolean} isFavorite - Se o item está nos favoritos
- * @param {Function} onNavigate - Callback para navegação (opcional)
- */
 export default function CardFilm({
   film = {},
   onDetails,

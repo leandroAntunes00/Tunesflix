@@ -2,17 +2,6 @@ import React from 'react';
 import { posterImage } from '../../services/tmdb';
 import './MoviePoster.css';
 
-/**
- * Componente MoviePoster - Exibe o poster do filme
- *
- * Responsável por renderizar o poster do filme com fallback
- * para quando não há imagem disponível.
- *
- * @param {Object} movie - Dados do filme
- * @param {string} movie.poster_path - Caminho do poster
- * @param {string} movie.title - Título do filme (para alt text)
- * @param {string} movie.name - Nome alternativo do filme
- */
 export default function MoviePoster({ movie }) {
   if (!movie) return null;
 

@@ -1,29 +1,6 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { fetchNowPlayingMovies } from '../services/tmdb';
 
-/**
- * Hook personalizado para gerenciamento de filmes em cartaz
- *
- * Fornece funcionalidades completas para buscar e navegar por filmes atualmente
- * em exibição nos cinemas, com controle de condições de corrida, paginação
- * inteligente e estados computados para melhor experiência do usuário.
- *
- * @param {number} initialPage - Página inicial para carregamento (padrão: 1)
- * @returns {Object} Estado e funções do hook
- *
- * @example
- * ```jsx
- * const {
- *   results,
- *   loading,
- *   hasResults,
- *   canGoNext,
- *   fetchMovies,
- *   nextPage,
- *   reset
- * } = useNowPlayingMovies(1);
- * ```
- */
 export default function useNowPlayingMovies(initialPage = 1) {
   const [page, setPage] = useState(initialPage);
   const [results, setResults] = useState([]);
