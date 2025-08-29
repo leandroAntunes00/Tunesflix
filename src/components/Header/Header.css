@@ -20,6 +20,7 @@
   align-items: center;
   gap: 0.6rem;
   cursor: pointer;
+  text-decoration: none; /* Remove sublinhado do link */
 }
 .tf-brand__logo {
   height: 44px;
@@ -44,6 +45,7 @@
   background: transparent;
   color: var(--text);
   font-weight: 700;
+  text-decoration: none; /* Remove sublinhado dos links */
 }
 .tf-nav__link.is-active {
   background: linear-gradient(90deg, rgba(82, 91, 242, 0.12), rgba(57, 79, 122, 0.12));
