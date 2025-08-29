@@ -32,5 +32,8 @@ test('Header links têm href corretos', () => {
     'href',
     '/'
   );
-  expect(screen.getByRole('link', { name: /Página de favoritos/i })).toHaveAttribute('href', '/favorites');
+  expect(screen.getByRole('link', { name: /Página de favoritos/i })).toHaveAttribute(
+    'href',
+    '/favorites'
+  );
 });
